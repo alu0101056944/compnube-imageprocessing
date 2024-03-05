@@ -35,8 +35,8 @@ int main(int argc, char** argv) {
 
       const int kMinimumX = j - kRadius;
       const int kMinimumY = i - kRadius;
-      for (size_t ii = j - kRadius; ii < std::min(image.rows, j + kRadius); ++ii) {
-        for (size_t jj = j - kRadius; jj < std::min(image.cols, j + kRadius); ++jj) {
+      for (int ii = j - kRadius; ii < std::min(image.rows, j + kRadius); ++ii) {
+        for (int jj = j - kRadius; jj < std::min(image.cols, j + kRadius); ++jj) {
           cv::Vec3b& pixelNeighbor = image.at<cv::Vec3b>(ii, jj);
 
           const double kR = pixelNeighbor[2];
