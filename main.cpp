@@ -57,20 +57,20 @@ int main(int argc, char** argv) {
             maximumIntensity = kIntensity;
           }
 
-          auto it = colorTotalsR.find(kIntensity);
-          if (it != colorTotalsR.end()) {
+          auto it2 = colorTotalsR.find(kIntensity);
+          if (it2 != colorTotalsR.end()) {
             colorTotalsR[kIntensity] += kR;
           } else {
             colorTotalsR[kIntensity] = 0;
           }
-          auto it2 = colorTotalsG.find(kIntensity);
-          if (it2 != colorTotalsG.end()) {
+          auto it3 = colorTotalsG.find(kIntensity);
+          if (it3 != colorTotalsG.end()) {
             colorTotalsG[kIntensity] += kG;
           } else {
             colorTotalsG[kIntensity] = 0;
           }
-          auto it3 = colorTotalsB.find(kIntensity);
-          if (it3 != colorTotalsB.end()) {
+          auto it4 = colorTotalsB.find(kIntensity);
+          if (it4 != colorTotalsB.end()) {
             colorTotalsB[kIntensity] += kB;
           } else {
             colorTotalsB[kIntensity] = 0;
