@@ -22,8 +22,8 @@ int main(int argc, char** argv) {
   const int kIntensityLevels = 6;
 
   const int kRadius = 5;
-  for (size_t i = 0; i < image.rows; ++i) {
-    for (size_t j = 0; j < image.cols; ++j) {
+  for (int i = 0; i < image.rows; ++i) {
+    for (int j = 0; j < image.cols; ++j) {
       cv::Vec3b& pixel = image.at<cv::Vec3b>(i, j);
 
       int maximumIntensity = -1;
