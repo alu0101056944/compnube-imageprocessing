@@ -85,9 +85,9 @@ int main(int argc, char** argv) {
       const int kBFinal =
           colorTotalsB[maximumIntensity] / intensityCount[maximumIntensity];
 
-      pixel.var[2] = kRFinal;
-      pixel.var[1] = kGFinal;
-      pixel.var[0] = kBFinal;
+      pixel.val[2] = kRFinal;
+      pixel.val[1] = kGFinal;
+      pixel.val[0] = kBFinal;
     }
   }
 
