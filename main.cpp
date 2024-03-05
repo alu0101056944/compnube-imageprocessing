@@ -33,8 +33,8 @@ int main(int argc, char** argv) {
       std::unordered_map<int, int> colorTotalsB;
       std::unordered_map<int, int> intensityCount;
 
-      const kMinimumX = j - kRadius;
-      const kMinimumY = i - kRadius;
+      const int kMinimumX = j - kRadius;
+      const int kMinimumY = i - kRadius;
       for (size_t ii = j - kRadius; ii < min(image.rows, j + kRadius); ++ii) {
         for (size_t jj = j - kRadius; jj < min(image.cols, j + kRadius); ++jj) {
           cv::Vec3b& pixelNeighbor = image.at<cv::Vec3b>(ii, jj);
