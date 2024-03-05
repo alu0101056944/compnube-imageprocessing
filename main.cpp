@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  cv::Vec3b& pixel = image.at<cv::Vec3b>(3000, 3000);
+  cv::Vec3b& pixel = image.at<cv::Vec3b>(-1, 3000);
 
   cv::imwrite("docs/f1_processed.jpg", image);
 
