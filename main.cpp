@@ -39,9 +39,9 @@ int main(int argc, char** argv) {
         for (int jj = j - kRadius; jj < std::min(image.cols, j + kRadius); ++jj) {
           cv::Vec3b& pixelNeighbor = image.at<cv::Vec3b>(ii, jj);
 
-          const double kR = pixelNeighbor[2];
-          const double kG = pixelNeighbor[1];
-          const double kB = pixelNeighbor[0];
+          const double kR = pixelNeighbor.val[2];
+          const double kG = pixelNeighbor.val[1];
+          const double kB = pixelNeighbor.val[0];
 
           // do the calculation of how many intensities are there
           const int kIntensity = (((kR + kG + kB) / 3) * kIntensityLevels) / 255.0f;
@@ -85,9 +85,9 @@ int main(int argc, char** argv) {
       const int kBFinal =
           colorTotalsB[maximumIntensity] / intensityCount[maximumIntensity];
 
-      pixel[2] = kRFinal;
-      pixel[1] = kGFinal;
-      pixel[0] = kBFinal;
+      pixel.var[2] = kRFinal;
+      pixel.var[1] = kGFinal;
+      pixel.var[0] = kBFinal;
     }
   }
 
