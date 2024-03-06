@@ -35,12 +35,14 @@ int main(int argc, char** argv) {
     return -1;
   }
 
+  cv::Mat outputImage = image.clone();
+
   const int kIntensityLevels = 20;
 
   const int kRadius = 5;
   for (int i = 0; i < image.rows; ++i) {
     for (int j = 0; j < image.cols; ++j) {
-      cv::Vec3b& pixel = image.at<cv::Vec3b>(i, j);
+      cv::Vec3b& pixel = outputImage.at<cv::Vec3b>(i, j);
 
       int maximumIntensity = -1;
 
@@ -74,23 +76,20 @@ int main(int argc, char** argv) {
             maximumIntensity = kIntensity;
           }
 
-          auto it2 = colorTotalsR.find(kIntensity);
-          if (it2 != colorTotalsR.end()) {
+          if (colorTotalsR.find(kIntensity) != colorTotalsR.end()) {
             colorTotalsR[kIntensity] += kR;
           } else {
-            colorTotalsR[kIntensity] = (int)kR;
+            colorTotalsR[kIntensity] = kR;
           }
-          auto it3 = colorTotalsG.find(kIntensity);
-          if (it3 != colorTotalsG.end()) {
+          if (colorTotalsG.find(kIntensity) != colorTotalsG.end()) {
             colorTotalsG[kIntensity] += kG;
           } else {
-            colorTotalsG[kIntensity] = (int)kG;
+            colorTotalsG[kIntensity] = kG;
           }
-          auto it4 = colorTotalsB.find(kIntensity);
-          if (it4 != colorTotalsB.end()) {
+          if (colorTotalsB.find(kIntensity) != colorTotalsB.end()) {
             colorTotalsB[kIntensity] += kB;
           } else {
-            colorTotalsB[kIntensity] = (int)kR;
+            colorTotalsB[kIntensity] = kR;
           }
           std::cout << "";
         }
@@ -103,9 +102,9 @@ int main(int argc, char** argv) {
       const int kBFinal =
           colorTotalsB[maximumIntensity] / intensityCount[maximumIntensity];
 
-      pixel.val[2] = kRFinal;
-      pixel.val[1] = kGFinal;
-      pixel.val[0] = kBFinal;
+      outputImage.val[2] = kRFinal;
+      outputImage.val[1] = kGFinal;
+      outputImage.val[0] = kBFinal;
     }
   }
 
