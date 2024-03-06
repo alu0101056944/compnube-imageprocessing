@@ -8,18 +8,32 @@
 #include <algorithm>
 #include <unordered_map>
 #include <string>
+#include <filesystem>
+using fs = std::filesystem;
 
 #include <opencv2/opencv.hpp>
 
 int main(int argc, char** argv) {
-  cv::Mat image = cv::imread("docs/f1.jpg");
+  if (argc < 2) {
+    std::cout << "Usage: <path to image> (expected at least one argument).";
+    std::cout << std::endl;
+  }
+
+  const std::string kFilePath = argv[1];
+  fs::path inputPath(kFilePath);
+
+  if (!std::exists(inputPath) || std::is_regular_file(inputPath)) {
+    std::cout << "Invalid file path." << std::endl;
+  }
+
+  cv::Mat image = cv::imread(kFilePath);
 
   if (image.empty()) {
     std::cerr << "Error: Unable to load image." << std::endl;
     return -1;
   }
 
-  const int kIntensityLevels = 6;
+  const int kIntensityLevels = 20;
 
   const int kRadius = 5;
   for (int i = 0; i < image.rows; ++i) {
@@ -46,7 +60,8 @@ int main(int argc, char** argv) {
           const double kB = pixelNeighbor.val[0];
 
           // do the calculation of how many intensities are there
-          const int kIntensity = (((kR + kG + kB) / 3) * kIntensityLevels) / 255.0f;
+          const int kIntensity =
+              (((kR + kG + kB) / 3) * kIntensityLevels) / 255.0f;
 
           auto it = intensityCount.find(kIntensity);
           if (it != intensityCount.end()) {
@@ -93,7 +108,10 @@ int main(int argc, char** argv) {
     }
   }
 
-  cv::imwrite("docs/f1_processed.jpg", image);
+  const string kOutputPath = (inputPath.parent_path() / inputPath.stem())
+      .string() + "_processed" + inputPath.extension().string();
+
+  cv::imwrite(kOutputPath, image);
 
   return 0;
 }
