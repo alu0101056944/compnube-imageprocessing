@@ -78,19 +78,19 @@ int main(int argc, char** argv) {
           if (it2 != colorTotalsR.end()) {
             colorTotalsR[kIntensity] += kR;
           } else {
-            colorTotalsR[kIntensity] = kR;
+            colorTotalsR[kIntensity] = (int)kR;
           }
           auto it3 = colorTotalsG.find(kIntensity);
           if (it3 != colorTotalsG.end()) {
             colorTotalsG[kIntensity] += kG;
           } else {
-            colorTotalsG[kIntensity] = kG;
+            colorTotalsG[kIntensity] = (int)kG;
           }
           auto it4 = colorTotalsB.find(kIntensity);
           if (it4 != colorTotalsB.end()) {
             colorTotalsB[kIntensity] += kB;
           } else {
-            colorTotalsB[kIntensity] = kR;
+            colorTotalsB[kIntensity] = (int)kR;
           }
           std::cout << "";
         }
