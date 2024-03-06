@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
     }
   }
 
-  const string kOutputPath = (inputPath.parent_path() / inputPath.stem())
+  const std::string kOutputPath = (inputPath.parent_path() / inputPath.stem())
       .string() + "_processed" + inputPath.extension().string();
 
   cv::imwrite(kOutputPath, image);
