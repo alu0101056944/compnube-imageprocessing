@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
   const std::string kFilePath = argv[1];
   fs::path inputPath(kFilePath);
 
-  if (!std::exists(inputPath) || std::is_regular_file(inputPath)) {
+  if (!fs::exists(inputPath) || fs::is_regular_file(inputPath)) {
     std::cout << "Invalid file path." << std::endl;
   }
 
