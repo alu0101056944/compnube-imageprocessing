@@ -17,6 +17,7 @@ int main(int argc, char** argv) {
   if (argc < 2) {
     std::cout << "Usage: <path to image> (expected at least one argument).";
     std::cout << std::endl;
+    return -1;
   }
 
   const std::string kFilePath = argv[1];
