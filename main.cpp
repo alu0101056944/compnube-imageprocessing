@@ -111,7 +111,7 @@ int main(int argc, char** argv) {
   const std::string kOutputPath = (inputPath.parent_path() / inputPath.stem())
       .string() + "_processed" + inputPath.extension().string();
 
-  cv::imwrite(kOutputPath, image);
+  cv::imwrite(kOutputPath, outputImage);
 
   return 0;
 }
