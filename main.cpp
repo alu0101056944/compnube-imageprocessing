@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include <string>
 #include <filesystem>
-using fs = std::filesystem;
+namespace fs = std::filesystem;
 
 #include <opencv2/opencv.hpp>
 
