@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
   const int kRadius = 5;
   for (int i = 0; i < image.rows; ++i) {
     for (int j = 0; j < image.cols; ++j) {
-      cv::Vec3b& pixel = outputImage.at<cv::Vec3b>(i, j);
+      cv::Vec3b& outputPixel = outputImage.at<cv::Vec3b>(i, j);
 
       int maximumIntensity = -1;
 
@@ -102,9 +102,9 @@ int main(int argc, char** argv) {
       const int kBFinal =
           colorTotalsB[maximumIntensity] / intensityCount[maximumIntensity];
 
-      outputImage.val[2] = kRFinal;
-      outputImage.val[1] = kGFinal;
-      outputImage.val[0] = kBFinal;
+      outputPixel.val[2] = kRFinal;
+      outputPixel.val[1] = kGFinal;
+      outputPixel.val[0] = kBFinal;
     }
   }
 
