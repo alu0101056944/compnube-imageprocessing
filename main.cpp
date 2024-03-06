@@ -94,6 +94,7 @@ int main(int argc, char** argv) {
           } else {
             colorTotalsB[kIntensity] = 0;
           }
+          std::cout;
         }
       }
 
