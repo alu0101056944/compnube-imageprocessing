@@ -49,8 +49,6 @@ int main(int argc, char** argv) {
       std::unordered_map<int, int> colorTotalsB;
       std::unordered_map<int, int> intensityCount;
 
-      const int kMinimumX = j - kRadius;
-      const int kMinimumY = i - kRadius;
       for (int ii = std::max(0, i - kRadius);
            ii < std::min(image.rows, i + kRadius); ++ii) {
         for (int jj = std::max(0, j - kRadius);
@@ -94,7 +92,7 @@ int main(int argc, char** argv) {
           } else {
             colorTotalsB[kIntensity] = 0;
           }
-          std::cout;
+          std::cout << "";
         }
       }
 
