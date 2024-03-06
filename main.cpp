@@ -24,6 +24,7 @@ int main(int argc, char** argv) {
 
   if (!fs::exists(inputPath) || fs::is_regular_file(inputPath)) {
     std::cout << "Invalid file path." << std::endl;
+    return -1;
   }
 
   cv::Mat image = cv::imread(kFilePath);
