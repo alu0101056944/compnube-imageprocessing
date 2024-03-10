@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
 
   cv::Mat outputImage = image.clone();
 
-  const int kIntensityLevels = 20;
+  const int kIntensityLevels = 4;
 
   const int kRadius = 10;
   for (int i = 0; i < image.rows; ++i) {
