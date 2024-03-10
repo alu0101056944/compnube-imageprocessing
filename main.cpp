@@ -62,34 +62,37 @@ int main(int argc, char** argv) {
           const double kB = pixelNeighbor.val[0];
 
           // do the calculation of how many intensities are there
-          const int kIntensity =
+          int intensity =
               (((kR + kG + kB) / 3) * kIntensityLevels) / 255.0f;
+          if (intensity > 255) {
+            intensity = 255;
+          }
 
-          auto it = intensityCount.find(kIntensity);
+          auto it = intensityCount.find(intensity);
           if (it != intensityCount.end()) {
-            ++intensityCount[kIntensity];
+            ++intensityCount[intensity];
           } else {
-            intensityCount[kIntensity] = 1;
+            intensityCount[intensity] = 1;
           }
 
-          if (maximumIntensity == -1 || maximumIntensity < kIntensity) {
-            maximumIntensity = kIntensity;
+          if (maximumIntensity == -1 || maximumIntensity < intensity) {
+            maximumIntensity = intensity;
           }
 
-          if (colorTotalsR.find(kIntensity) != colorTotalsR.end()) {
-            colorTotalsR[kIntensity] += kR;
+          if (colorTotalsR.find(intensity) != colorTotalsR.end()) {
+            colorTotalsR[intensity] += kR;
           } else {
-            colorTotalsR[kIntensity] = kR;
+            colorTotalsR[intensity] = kR;
           }
-          if (colorTotalsG.find(kIntensity) != colorTotalsG.end()) {
-            colorTotalsG[kIntensity] += kG;
+          if (colorTotalsG.find(intensity) != colorTotalsG.end()) {
+            colorTotalsG[intensity] += kG;
           } else {
-            colorTotalsG[kIntensity] = kG;
+            colorTotalsG[intensity] = kG;
           }
-          if (colorTotalsB.find(kIntensity) != colorTotalsB.end()) {
-            colorTotalsB[kIntensity] += kB;
+          if (colorTotalsB.find(intensity) != colorTotalsB.end()) {
+            colorTotalsB[intensity] += kB;
           } else {
-            colorTotalsB[kIntensity] = kR;
+            colorTotalsB[intensity] = kR;
           }
           std::cout << "";
         }
