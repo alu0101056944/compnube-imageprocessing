@@ -19,6 +19,7 @@
 namespace fs = std::filesystem;
 
 void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
+  std::cout << "Paralell:" << std::endl;
   std::cout << "Size \t\t T. Exec (Seconds)" << std::endl;
 
   const int kAmountOfIterations = 5;
@@ -30,6 +31,24 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
     auto t2 = std::chrono::high_resolution_clock::now();
 
     const cv::Mat tempImage = getProcessedImageParallel(image);
+    std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t";
+    auto timeSpan =
+        std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+    std::cout << timeSpan.count() / kAmountOfIterations << std::endl;
+  }
+
+  std::cout << "Sequential:" << std::endl;
+  std::cout << "Size \t\t T. Exec (Seconds)" << std::endl;
+
+  const int kAmountOfIterations = 5;
+  for (const cv::Mat& image : images) {
+    auto t1 = std::chrono::high_resolution_clock::now();
+    for (size_t i = 0; i < kAmountOfIterations; ++i) {
+      const cv::Mat processedImage = getProcessedImageSequential(image);
+    }
+    auto t2 = std::chrono::high_resolution_clock::now();
+
+    const cv::Mat tempImage = getProcessedImageSequential(image);
     std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t";
     auto timeSpan =
         std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
