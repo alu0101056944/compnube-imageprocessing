@@ -22,7 +22,7 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
   std::cout << "Size \t\t T. Exec (Seconds)" << std::endl;
 
   const int kAmountOfIterations = 5;
-  for (cv::Mat& image : images) {
+  for (const cv::Mat& image : images) {
     auto t1 = std::chrono::high_resolution_clock::now();
     for (size_t i = 0; i < kAmountOfIterations; ++i) {
       const cv::Mat processedImage = getProcessedImageParallel(image);
