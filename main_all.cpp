@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
 
   std::array<cv::Mat, 4> images;
   for (size_t i = 0; i < images.size(); ++i) {
-    image[i] = cv::imread(paths[i]);
+    images[i] = cv::imread(paths[i]);
     if (image[i].empty()) {
       std::cerr << "Error: Unable to load image." << std::endl;
       return -1;
