@@ -50,7 +50,7 @@ void writeImages(const std::array<cv::Mat, 4>& images,
   }
 }
 
-int main(int argc, char** argv) {
+int main() {
   std::array<std::string, 4> paths = { "docs/f1.jpg", "docs/f1_50%.jpg",
     "docs/f1_25%.jpg", "docs/f1_10%.jpg" };
   for (std::string path : paths) {
