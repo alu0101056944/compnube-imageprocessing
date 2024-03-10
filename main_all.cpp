@@ -22,10 +22,10 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
   std::cout << "Size \t\t T. Exec (Seconds)" << std::endl;
 
   const int kAmountOfIterations = 5;
-  for (cv::Mat image : images) {
+  for (cv::Mat& image : images) {
     auto t1 = std::chrono::high_resolution_clock::now();
     for (size_t i = 0; i < kAmountOfIterations; ++i) {
-      const cv::Mat processedImage = getProcessedImage(image);
+      const cv::Mat processedImage = getProcessedImageParalell(image);
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
@@ -35,8 +35,14 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
     auto timeSpan =
         std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
     std::cout << timeSpan.count() / kAmountOfIterations << std::endl;
+  }
+}
 
-    const cv::Mat outputImage = getProcessedImageParallel(image);
+void writeImages(const std::array<cv::Mat, 4>& images,
+    std::array<std::string, 4> paths) {
+  for (size_t i = 0; i < images.size(); ++i) {
+    const cv::Mat outputImage = getProcessedImageParallel(images[i]);
+    fs::path inputPath(paths[i]);
     const std::string kOutputPath =
         (inputPath.parent_path() / inputPath.stem()).string() +
         "_processed" + inputPath.extension().string();
@@ -65,5 +71,6 @@ int main(int argc, char** argv) {
   }
 
   printExecutionTimes(images);
+  writeImages(images, paths);
   return 0;
 }
