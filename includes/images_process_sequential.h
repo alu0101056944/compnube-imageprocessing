@@ -10,6 +10,6 @@
 
 #include <opencv2/opencv.hpp>
 
-[[nodiscard]] cv::Mat getProcessedImageParallel(const cv::Mat& image);
+[[nodiscard]] cv::Mat getProcessedImageSequential(const cv::Mat& image);
 
 #endif
