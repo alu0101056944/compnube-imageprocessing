@@ -1,4 +1,4 @@
-#include "../includes/images_process_parallel.h"
+#include "../includes/image_process_parallel.h"
 
 #include <algorithm>
 #include <unordered_map>
