@@ -129,7 +129,7 @@ int main(int argc, char** argv) {
   std::cout << time_span.count() / kAmountOfIterations;
   std::cout << " seconds. (Execution time)" << std::endl; 
 
-  const cv::Mat processedImage = getProcessedImage(image);
+  const cv::Mat outputImage = getProcessedImage(image);
   const std::string kOutputPath = (inputPath.parent_path() / inputPath.stem())
       .string() + "_processed" + inputPath.extension().string();
   cv::imwrite(kOutputPath, outputImage);
