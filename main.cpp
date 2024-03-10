@@ -104,21 +104,18 @@ int main(int argc, char** argv) {
 
   const std::string kFilePath = argv[1];
   fs::path inputPath(kFilePath);
-
   if (!fs::exists(inputPath) || !fs::is_regular_file(inputPath)) {
     std::cout << "Invalid file path." << std::endl;
     return -1;
   }
 
   cv::Mat image = cv::imread(kFilePath);
-
   if (image.empty()) {
     std::cerr << "Error: Unable to load image." << std::endl;
     return -1;
   }
 
   const int kAmountOfIterations = 5;
-
   auto t1 = std::chrono::high_resolution_clock::now();
   for (size_t i = 0; i < kAmountOfIterations; ++i) {
     const cv::Mat processedImage = getProcessedImage(image);
