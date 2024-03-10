@@ -30,8 +30,7 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
     auto t2 = std::chrono::high_resolution_clock::now();
 
     const cv::Mat tempImage = getProcessedImageParallel(image);
-    const std::string size = tempImage.rows + "x" + tempImage.cols;
-    std::cout << size << "\t\t" << std::endl;
+    std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t" << std::endl;
     auto timeSpan =
         std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
     std::cout << timeSpan.count() / kAmountOfIterations << std::endl;
