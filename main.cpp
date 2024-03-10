@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
 
   const int kIntensityLevels = 4;
 
-  const int kRadius = 5;
+  const int kRadius = 3;
   for (int i = 0; i < image.rows; ++i) {
     for (int j = 0; j < image.cols; ++j) {
       cv::Vec3b& outputPixel = outputImage.at<cv::Vec3b>(i, j);
