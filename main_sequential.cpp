@@ -22,16 +22,17 @@ void printExecutionTime(const cv::Mat& image) {
   }
   auto t2 = std::chrono::high_resolution_clock::now();
 
-  auto time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
-  std::cout << time_span.count() / kAmountOfIterations;
-  std::cout << " seconds. (Execution time)" << std::endl; 
+  auto timeSpan =
+      std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+  std::cout << timeSpan.count() / kAmountOfIterations;
+  std::cout << " seconds. (Execution time)" << std::endl;
 }
 
 void writeImage(const cv::Mat& image, const fs::path& path) {
-    const cv::Mat outputImage = getProcessedImageSequential(image);
-    const std::string kOutputPath = (path.parent_path() / path.stem())
-        .string() + "_processed" + path.extension().string();
-    cv::imwrite(kOutputPath, outputImage);
+  const cv::Mat outputImage = getProcessedImageSequential(image);
+  const std::string kOutputPath = (path.parent_path() / path.stem())
+      .string() + "_processed" + path.extension().string();
+  cv::imwrite(kOutputPath, outputImage);
 }
 
 int main(int argc, char** argv) {
