@@ -4,7 +4,8 @@
  * Description: A oil paint image processing algorithm in parallell using OpenMP
 */
 
-#pragma once
+#ifndef IMAGE_PROCESS_PARALELL
+#define IMAGE_PROCESS_PARALELL
 
 #include <algorithm>
 #include <unordered_map>
@@ -87,3 +88,5 @@
 
   return outputImage;
 }
+
+#endif

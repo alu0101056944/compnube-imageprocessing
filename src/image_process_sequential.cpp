@@ -5,7 +5,7 @@
  *    version.
 */
 
-#pragma once
+#ifndef IMAGE_PROCESS_SEQUENTIAL
 
 #include <algorithm>
 #include <unordered_map>
@@ -88,3 +88,5 @@
 
   return outputImage;
 }
+
+#endif
