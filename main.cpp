@@ -8,33 +8,15 @@
 #include <algorithm>
 #include <unordered_map>
 #include <string>
+
 #include <filesystem>
 namespace fs = std::filesystem;
 
+#include <chrono>
+
 #include <opencv2/opencv.hpp>
 
-int main(int argc, char** argv) {
-  if (argc < 2) {
-    std::cout << "Usage: <path to image> (expected at least one argument).";
-    std::cout << std::endl;
-    return -1;
-  }
-
-  const std::string kFilePath = argv[1];
-  fs::path inputPath(kFilePath);
-
-  if (!fs::exists(inputPath) || !fs::is_regular_file(inputPath)) {
-    std::cout << "Invalid file path." << std::endl;
-    return -1;
-  }
-
-  cv::Mat image = cv::imread(kFilePath);
-
-  if (image.empty()) {
-    std::cerr << "Error: Unable to load image." << std::endl;
-    return -1;
-  }
-
+[[nodiscard]] cv::Mat getProcessedImage(const cv::Mat& image) {
   cv::Mat outputImage = image.clone();
 
   const int kIntensityLevels = 20;
@@ -94,7 +76,6 @@ int main(int argc, char** argv) {
           } else {
             colorTotalsB[intensity] = kR;
           }
-          std::cout << "";
         }
       }
 
@@ -111,9 +92,46 @@ int main(int argc, char** argv) {
     }
   }
 
+  return std::move(outputImage);
+}
+
+int main(int argc, char** argv) {
+  if (argc < 2) {
+    std::cout << "Usage: <path to image> (expected at least one argument).";
+    std::cout << std::endl;
+    return -1;
+  }
+
+  const std::string kFilePath = argv[1];
+  fs::path inputPath(kFilePath);
+
+  if (!fs::exists(inputPath) || !fs::is_regular_file(inputPath)) {
+    std::cout << "Invalid file path." << std::endl;
+    return -1;
+  }
+
+  cv::Mat image = cv::imread(kFilePath);
+
+  if (image.empty()) {
+    std::cerr << "Error: Unable to load image." << std::endl;
+    return -1;
+  }
+
+  const int kAmountOfIterations = 50;
+
+  auto t1 = high_resolution_clock::now();
+  for (size_t i = 0; i < kAmountofIterations; ++i) {
+    const cv::Mat processedImage = getProcessedImage(image);
+  }
+  auto t2 = high_resolution_clock::now();
+
+  auto time_span = duration_cast<duration<double>>(t2 - t1);
+  std::cout << time_span.count() / kAmountofIterations;
+  std::cout << " seconds. (Execution time)" << std::endl; 
+
+  const cv::Mat processedImage = getProcessedImage(image);
   const std::string kOutputPath = (inputPath.parent_path() / inputPath.stem())
       .string() + "_processed" + inputPath.extension().string();
-
   cv::imwrite(kOutputPath, outputImage);
 
   return 0;
