@@ -92,7 +92,7 @@ namespace fs = std::filesystem;
     }
   }
 
-  return std::move(outputImage);
+  return outputImage;
 }
 
 int main(int argc, char** argv) {
@@ -119,14 +119,14 @@ int main(int argc, char** argv) {
 
   const int kAmountOfIterations = 50;
 
-  auto t1 = high_resolution_clock::now();
-  for (size_t i = 0; i < kAmountofIterations; ++i) {
+  auto t1 = std::chrono::high_resolution_clock::now();
+  for (size_t i = 0; i < kAmountOfIterations; ++i) {
     const cv::Mat processedImage = getProcessedImage(image);
   }
-  auto t2 = high_resolution_clock::now();
+  auto t2 = std::chrono::high_resolution_clock::now();
 
-  auto time_span = duration_cast<duration<double>>(t2 - t1);
-  std::cout << time_span.count() / kAmountofIterations;
+  auto time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+  std::cout << time_span.count() / kAmountOfIterations;
   std::cout << " seconds. (Execution time)" << std::endl; 
 
   const cv::Mat processedImage = getProcessedImage(image);
