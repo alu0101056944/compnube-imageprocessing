@@ -4,6 +4,8 @@
  * Description: A oil paint image processing algorithm in parallell using OpenMP
 */
 
+#pragma once
+
 #include <algorithm>
 #include <unordered_map>
 #include <opencv2/opencv.hpp>

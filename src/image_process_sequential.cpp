@@ -5,6 +5,8 @@
  *    version.
 */
 
+#pragma once
+
 #include <algorithm>
 #include <unordered_map>
 #include <opencv2/opencv.hpp>
