@@ -12,7 +12,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#include "src/image_process_sequential.cpp"
+#include "includes/image_process_sequential.h"
 
 namespace fs = std::filesystem;
 
