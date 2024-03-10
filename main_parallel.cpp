@@ -18,7 +18,7 @@ void printExecutionTime(const cv::Mat& image) {
   const int kAmountOfIterations = 5;
   auto t1 = std::chrono::high_resolution_clock::now();
   for (size_t i = 0; i < kAmountOfIterations; ++i) {
-    const cv::Mat processedImage = getProcessedImage(image);
+    const cv::Mat processedImage = getProcessedImageParallel(image);
   }
   auto t2 = std::chrono::high_resolution_clock::now();
 
