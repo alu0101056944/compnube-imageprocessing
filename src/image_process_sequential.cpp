@@ -6,6 +6,7 @@
 */
 
 #ifndef IMAGE_PROCESS_SEQUENTIAL
+#define IMAGE_PROCESS_SEQUENTIAL
 
 #include <algorithm>
 #include <unordered_map>
