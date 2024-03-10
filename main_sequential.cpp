@@ -12,6 +12,8 @@
 
 #include <opencv2/opencv.hpp>
 
+#include "src/image_process_sequential.cpp"
+
 namespace fs = std::filesystem;
 
 void printExecutionTime(const cv::Mat& image) {

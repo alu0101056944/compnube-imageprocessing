@@ -11,6 +11,7 @@
 #include <filesystem>
 
 #include <opencv2/opencv.hpp>
+#include "src/image_process_parallel.cpp"
 
 namespace fs = std::filesystem;
 
