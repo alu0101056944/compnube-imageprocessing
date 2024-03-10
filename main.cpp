@@ -117,7 +117,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  const int kAmountOfIterations = 50;
+  const int kAmountOfIterations = 5;
 
   auto t1 = std::chrono::high_resolution_clock::now();
   for (size_t i = 0; i < kAmountOfIterations; ++i) {
