@@ -7,9 +7,9 @@
 [[nodiscard]] cv::Mat getProcessedImageSequential(const cv::Mat& image) {
   cv::Mat outputImage = image.clone();
 
-  const int kIntensityLevels = 40;
+  const int kIntensityLevels = 20;
+  const int kRadius = 5;
 
-  const int kRadius = 3;
   for (int i = 0; i < image.rows; ++i) {
     for (int j = 0; j < image.cols; ++j) {
       cv::Vec3b& outputPixel = outputImage.at<cv::Vec3b>(i, j);
