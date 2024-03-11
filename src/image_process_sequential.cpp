@@ -33,6 +33,9 @@
 
           int intensity =
               (((kR + kG + kB) / 3) * kIntensityLevels) / 255.0f;
+          if (intensity > 255) {
+            intensity = 255;
+          }
 
           auto it = intensityCount.find(intensity);
           if (it != intensityCount.end()) {
