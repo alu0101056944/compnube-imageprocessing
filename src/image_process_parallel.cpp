@@ -1,27 +1,16 @@
-/**
- * Author: Marcos Barrios
- * Since: 26/02/2024
- * Description: A oil paint image processing algorithm.
-*/
+#include "../includes/image_process_parallel.h"
 
-#include <iostream>
 #include <algorithm>
 #include <unordered_map>
-#include <string>
-
-#include <filesystem>
-namespace fs = std::filesystem;
-
-#include <chrono>
-
 #include <opencv2/opencv.hpp>
 
-[[nodiscard]] cv::Mat getProcessedImage(const cv::Mat& image) {
+[[nodiscard]] cv::Mat getProcessedImageParallel(const cv::Mat& image) {
   cv::Mat outputImage = image.clone();
 
-  const int kIntensityLevels = 20;
+  const int kIntensityLevels = 40;
 
-  const int kRadius = 5;
+  const int kRadius = 3;
+#pragma omp parallel for
   for (int i = 0; i < image.rows; ++i) {
     for (int j = 0; j < image.cols; ++j) {
       cv::Vec3b& outputPixel = outputImage.at<cv::Vec3b>(i, j);
@@ -43,7 +32,6 @@ namespace fs = std::filesystem;
           const double kG = pixelNeighbor.val[1];
           const double kB = pixelNeighbor.val[0];
 
-          // do the calculation of how many intensities are there
           int intensity =
               (((kR + kG + kB) / 3) * kIntensityLevels) / 255.0f;
           if (intensity > 255) {
@@ -93,43 +81,4 @@ namespace fs = std::filesystem;
   }
 
   return outputImage;
-}
-
-int main(int argc, char** argv) {
-  if (argc < 2) {
-    std::cout << "Usage: <path to image> (expected at least one argument).";
-    std::cout << std::endl;
-    return -1;
-  }
-
-  const std::string kFilePath = argv[1];
-  fs::path inputPath(kFilePath);
-  if (!fs::exists(inputPath) || !fs::is_regular_file(inputPath)) {
-    std::cout << "Invalid file path." << std::endl;
-    return -1;
-  }
-
-  cv::Mat image = cv::imread(kFilePath);
-  if (image.empty()) {
-    std::cerr << "Error: Unable to load image." << std::endl;
-    return -1;
-  }
-
-  const int kAmountOfIterations = 5;
-  auto t1 = std::chrono::high_resolution_clock::now();
-  for (size_t i = 0; i < kAmountOfIterations; ++i) {
-    const cv::Mat processedImage = getProcessedImage(image);
-  }
-  auto t2 = std::chrono::high_resolution_clock::now();
-
-  auto time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
-  std::cout << time_span.count() / kAmountOfIterations;
-  std::cout << " seconds. (Execution time)" << std::endl; 
-
-  const cv::Mat outputImage = getProcessedImage(image);
-  const std::string kOutputPath = (inputPath.parent_path() / inputPath.stem())
-      .string() + "_processed" + inputPath.extension().string();
-  cv::imwrite(kOutputPath, outputImage);
-
-  return 0;
 }
