@@ -11,7 +11,6 @@
 #include <filesystem>
 #include <array>
 #include <vector>
-#include <omp>
 
 #include <opencv2/opencv.hpp>
 
