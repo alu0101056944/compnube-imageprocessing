@@ -56,7 +56,7 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
 
       const cv::Mat tempImage = getProcessedImageParallel(images[i]);
       std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t";
-      std::cout << threadAmount << "\t\t";
+      std::cout << threadAmount << "\t\t\t";
       auto timeSpan =
           std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
       const double kSpeedUp = (timeSpan.count() / kAmountOfIterations) /
