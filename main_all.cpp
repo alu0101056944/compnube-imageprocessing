@@ -10,6 +10,8 @@
 #include <chrono>
 #include <filesystem>
 #include <array>
+#include <vector>
+#include <omp>
 
 #include <opencv2/opencv.hpp>
 
@@ -19,27 +21,11 @@
 namespace fs = std::filesystem;
 
 void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
-  std::cout << "Paralell:" << std::endl;
-  std::cout << "Size \t\t T. Exec (Seconds)" << std::endl;
-
   const int kAmountOfIterations = 5;
-  for (const cv::Mat& image : images) {
-    auto t1 = std::chrono::high_resolution_clock::now();
-    for (size_t i = 0; i < kAmountOfIterations; ++i) {
-      const cv::Mat processedImage = getProcessedImageParallel(image);
-    }
-    auto t2 = std::chrono::high_resolution_clock::now();
-
-    const cv::Mat tempImage = getProcessedImageParallel(image);
-    std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t";
-    auto timeSpan =
-        std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
-    std::cout << timeSpan.count() / kAmountOfIterations << std::endl;
-  }
 
   std::cout << "Sequential:" << std::endl;
   std::cout << "Size \t\t T. Exec (Seconds)" << std::endl;
-
+  std::vector<double> executionTimesSequential;
   for (const cv::Mat& image : images) {
     auto t1 = std::chrono::high_resolution_clock::now();
     for (size_t i = 0; i < kAmountOfIterations; ++i) {
@@ -52,6 +38,31 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
     auto timeSpan =
         std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
     std::cout << timeSpan.count() / kAmountOfIterations << std::endl;
+    executionTimesSequential.push_back(timeSpan.count() / kAmountOfIterations);
+  }
+
+  std::cout << "Paralell:" << std::endl;
+  std::cout << "Size \t\t\t ThreadAmount \t\t\t Speed_up" << std::endl;
+  std::array<int, 4> threadAmounts = {2, 4, 8, 16};
+  for (size_t i = 0; i < images.size(); i++) {
+    for (int threadAmount : threadAmounts) {
+      omp_set_num_threads(threadAmount);
+
+      auto t1 = std::chrono::high_resolution_clock::now();
+      for (size_t i = 0; i < kAmountOfIterations; ++i) {
+        const cv::Mat processedImage = getProcessedImageParallel(images[i]);
+      }
+      auto t2 = std::chrono::high_resolution_clock::now();
+
+      const cv::Mat tempImage = getProcessedImageParallel(images[i]);
+      std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t";
+      std::cout << threadAmount << "\t\t";
+      auto timeSpan =
+          std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+      const double kSpeedUp = (timeSpan.count() / kAmountOfIterations) /
+          executionTimesSequential[i];
+      std::cout << kSpeedUp << std::endl;
+    }
   }
 }
 
