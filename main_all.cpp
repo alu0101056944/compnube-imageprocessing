@@ -55,12 +55,12 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
       auto t2 = std::chrono::high_resolution_clock::now();
 
       const cv::Mat tempImage = getProcessedImageParallel(images[i]);
-      std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t";
+      std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t\t";
       std::cout << threadAmount << "\t\t\t";
       auto timeSpan =
           std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
-      const double kSpeedUp = (timeSpan.count() / kAmountOfIterations) /
-          executionTimesSequential[i];
+      const double kSpeedUp = executionTimesSequential[i] /
+          (timeSpan.count() / kAmountOfIterations);
       std::cout << kSpeedUp << std::endl;
     }
   }
