@@ -42,7 +42,7 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
   }
 
   std::cout << "Paralell:" << std::endl;
-  std::cout << "Size \t\t\t ThreadAmount \t\t\t Speed_up" << std::endl;
+  std::cout << "Size \t\t\t ThreadAmount \t\t Speed_up" << std::endl;
   std::array<int, 4> threadAmounts = {2, 4, 8, 16};
   for (size_t i = 0; i < images.size(); i++) {
     for (int threadAmount : threadAmounts) {
