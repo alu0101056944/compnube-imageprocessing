@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(main VERSION 0.1.0)
-set(OpenCV_DIR opencv-4.x-build/)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -fopenmp")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
