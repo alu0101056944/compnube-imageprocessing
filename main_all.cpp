@@ -48,7 +48,7 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
     auto t2 = std::chrono::high_resolution_clock::now();
 
     const cv::Mat tempImage = getProcessedImageSequential(image);
-    std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t";
+    std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t\t";
     auto timeSpan =
         std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
     std::cout << timeSpan.count() / kAmountOfIterations << std::endl;
@@ -68,8 +68,8 @@ void writeImages(const std::array<cv::Mat, 4>& images,
 }
 
 int main() {
-  std::array<std::string, 4> paths = { "docs/f1.jpg", "docs/f1_50%.jpg",
-    "docs/f1_25%.jpg", "docs/f1_10%.jpg" };
+  std::array<std::string, 4> paths = { "docs/f1_10%.jpg", "docs/f1_25%.jpg",
+    "docs/f1_50%.jpg", "docs/f1.jpg" };
   for (std::string path : paths) {
     fs::path inputPath(path);
     if (!fs::exists(inputPath) || !fs::is_regular_file(inputPath)) {
