@@ -12,7 +12,7 @@
 #include <array>
 #include <vector>
 #include <omp.h>
-#include <time.h>
+#include <sys/time.h>
 
 #include <opencv2/opencv.hpp>
 
