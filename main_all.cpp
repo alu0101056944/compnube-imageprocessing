@@ -39,9 +39,10 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
     double kEjecutionTime = timeEnd->tv_sec - timeInit->tv_sec +
         (timeEnd->tv_usec - timeInit->tv_usec) / 1.0e6;
     const cv::Mat tempImage = getProcessedImageSequential(image);
-    std::cout << tempImage.rows << "x" << std::setw(10) << std::left
-              << tempImage.cols << std::setw(12) << std::left
-              << kEjecutionTime / kAmountOfIterations << std::endl;
+    std::cout << std::setw(6) << std::left << tempImage.rows << "x"
+              << std::setw(6) << std::left << tempImage.cols
+              << std::setw(12) << std::left << kEjecutionTime / kAmountOfIterations
+              << std::endl;
     executionTimesSequential.push_back(kEjecutionTime / kAmountOfIterations);
   }
 
@@ -65,10 +66,11 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
           (kEjecutionTime / kAmountOfIterations);
 
       const cv::Mat tempImage = getProcessedImageParallel(images[i]);
-      std::cout << tempImage.rows << "x" << std::setw(10) << std::left
-                << tempImage.cols << std::setw(5) << std::left << threadAmount
-                << std::setw(12) << std::left << executionTimesSequential[i]
-                << std::setw(12) << std::left << kSpeedUp << std::endl;
+      std::cout << std::setw(6) << std::left << tempImage.rows << "x"
+                << std::setw(6) << std::left << tempImage.cols
+                << std::setw(10) << std::left << threadAmount
+                << std::setw(14) << std::left << executionTimesSequential[i]
+                << std::setw(14) << std::left << kSpeedUp << std::endl;
     }
   }
 }
