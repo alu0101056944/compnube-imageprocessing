@@ -13,6 +13,7 @@
 #include <vector>
 #include <omp.h>
 #include <sys/time.h>
+#include <iomanip>
 
 #include <opencv2/opencv.hpp>
 
@@ -24,8 +25,8 @@ namespace fs = std::filesystem;
 void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
   const int kAmountOfIterations = 5;
 
-  std::cout << "Sequential:" << std::endl;
-  std::cout << "Size \t\t T. Exec (Seconds)" << std::endl;
+  std::cout << "Sequential:" << std::endl
+            << "Size \t\t Exec.Time (Seconds)" << std::endl;
   std::vector<double> executionTimesSequential;
   for (const cv::Mat& image : images) {
     struct timeval timeInit[1], timeEnd[1];
@@ -38,13 +39,14 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
     double kEjecutionTime = timeEnd->tv_sec - timeInit->tv_sec +
         (timeEnd->tv_usec - timeInit->tv_usec) / 1.0e6;
     const cv::Mat tempImage = getProcessedImageSequential(image);
-    std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t\t";
-    std::cout << kEjecutionTime / kAmountOfIterations << std::endl;
+    std::cout << std::setw(10) << std::left << tempImage.rows << "x"
+              << tempImage.cols << std::setw(12) << std::left
+              << kEjecutionTime / kAmountOfIterations << std::endl;
     executionTimesSequential.push_back(kEjecutionTime / kAmountOfIterations);
   }
 
-  std::cout << "Paralell:" << std::endl;
-  std::cout << "Size \t\t\t ThreadAmount Exec.Time(Seq)\t\t Speed_up" << std::endl;
+  std::cout << "Paralell:" << std::endl
+            << "Size \t ThreadAmount \t Exec.Time(Seq) \t Speed_up" << std::endl;
   std::array<int, 4> threadAmounts = {2, 4, 8, 16};
   for (size_t i = 0; i < images.size(); i++) {
     for (int threadAmount : threadAmounts) {
@@ -59,13 +61,15 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
 
       double kEjecutionTime = timeEnd->tv_sec - timeInit->tv_sec +
           (timeEnd->tv_usec - timeInit->tv_usec) / 1.0e6;
-      const cv::Mat tempImage = getProcessedImageParallel(images[i]);
-      std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t\t";
-      std::cout << threadAmount << "\t\t\t";
-      std::cout << executionTimesSequential[i] << "\t\t";
       const double kSpeedUp = executionTimesSequential[i] /
           (kEjecutionTime / kAmountOfIterations);
-      std::cout << kSpeedUp << std::endl;
+
+      const cv::Mat tempImage = getProcessedImageParallel(images[i]);
+      std::cout << std::setw(10) << std::left << tempImage.rows << "x"
+          << tempImage.cols << std::setw(5) << std::left
+          << threadAmount << std::setw(12) << std::left 
+          << executionTimesSequential[i] << std::setw(12) << std::left
+          << kSpeedUp << std::endl;
     }
   }
 }
