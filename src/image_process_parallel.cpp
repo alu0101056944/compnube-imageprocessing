@@ -11,7 +11,7 @@
   const int kIntensityLevels = 20;
   const int kRadius = 5;
 
-#pragma omp parallel for shared(outputImage, image)
+#pragma omp parallel for shared(outputImage, image) collapse(2)
   for (int i = 0; i < image.rows; ++i) {
     for (int j = 0; j < image.cols; ++j) {
       cv::Vec3b& outputPixel = outputImage.at<cv::Vec3b>(i, j);
