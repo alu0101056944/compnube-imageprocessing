@@ -44,7 +44,7 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
   }
 
   std::cout << "Paralell:" << std::endl;
-  std::cout << "Size \t\t\t ThreadAmount \t\t Speed_up" << std::endl;
+  std::cout << "Size \t\t\t ThreadAmount Exec.Time(Seq)\t\t Speed_up" << std::endl;
   std::array<int, 4> threadAmounts = {2, 4, 8, 16};
   for (size_t i = 0; i < images.size(); i++) {
     for (int threadAmount : threadAmounts) {
@@ -62,6 +62,7 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
       const cv::Mat tempImage = getProcessedImageParallel(images[i]);
       std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t\t";
       std::cout << threadAmount << "\t\t\t";
+      std::cout << executionTimesSequential[i] << "\t\t";
       const double kSpeedUp = executionTimesSequential[i] /
           (kEjecutionTime / kAmountOfIterations);
       std::cout << kSpeedUp << std::endl;
