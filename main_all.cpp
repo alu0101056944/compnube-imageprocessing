@@ -71,7 +71,7 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
                 << std::setw(6) << std::left << tempImage.cols
                 << std::setw(15) << std::left << threadAmount
                 << std::setw(18) << std::left << executionTimesSequential[i]
-                << std::setw(18) << std::left << kEjecutionTime
+                << std::setw(18) << std::left << kEjecutionTime / kAmountOfIterations
                 << std::setw(14) << std::left << kSpeedUp << std::endl;
     }
   }

@@ -1,11 +1,13 @@
 #include "../includes/image_process_parallel.h"
 
 #include <algorithm>
+#include <iostream>
 #include <unordered_map>
 #include <opencv2/opencv.hpp>
 
 [[nodiscard]] cv::Mat getProcessedImageParallel(const cv::Mat& image) {
   cv::Mat outputImage = image.clone();
+  std::cout << "Executing image paralell" << std::endl;
 
   const int kIntensityLevels = 20;
   const int kRadius = 5;
@@ -80,5 +82,6 @@
     }
   }
 
+  std::cout << "Ended image parallel" << std::endl;
   return outputImage;
 }
