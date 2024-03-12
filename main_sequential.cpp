@@ -9,6 +9,7 @@
 #include <string>
 #include <chrono>
 #include <filesystem>
+#include <time.h>
 
 #include <opencv2/opencv.hpp>
 
@@ -18,15 +19,18 @@ namespace fs = std::filesystem;
 
 void printExecutionTime(const cv::Mat& image) {
   const int kAmountOfIterations = 5;
-  auto t1 = std::chrono::high_resolution_clock::now();
+
+  struct timeval timeInit[1], timeEnd[1];
+  gettimeofday(timeInit, NULL);
   for (size_t i = 0; i < kAmountOfIterations; ++i) {
     const cv::Mat processedImage = getProcessedImageSequential(image);
   }
-  auto t2 = std::chrono::high_resolution_clock::now();
+  gettimeofday(timeEnd, NULL);
 
-  auto timeSpan =
-      std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
-  std::cout << timeSpan.count() / kAmountOfIterations;
+
+  double kEjecutionTime = time_end->tv_sec - time_init->tv_sec +
+      (time_end->tv_usec - time_init->tv_usec) / 1.0e6;
+  std::cout << kEjecutionTime / kAmountOfIterations;
   std::cout << " seconds. (Execution time)" << std::endl;
 }
 
