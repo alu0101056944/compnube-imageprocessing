@@ -18,7 +18,7 @@
 namespace fs = std::filesystem;
 
 void printExecutionTime(const cv::Mat& image) {
-  const int kAmountOfIterations = 5;
+  const int kAmountOfIterations = 1;
 
   struct timeval timeInit[1], timeEnd[1];
   gettimeofday(timeInit, NULL);
