@@ -39,7 +39,7 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
     double kEjecutionTime = timeEnd->tv_sec - timeInit->tv_sec +
         (timeEnd->tv_usec - timeInit->tv_usec) / 1.0e6;
     const cv::Mat tempImage = getProcessedImageSequential(image);
-    std::cout << std::setw(6) << std::left << tempImage.rows << "x"
+    std::cout << std::setw(4) << std::left << tempImage.rows << "x"
               << std::setw(6) << std::left << tempImage.cols
               << std::setw(12) << std::left << kEjecutionTime / kAmountOfIterations
               << std::endl;
