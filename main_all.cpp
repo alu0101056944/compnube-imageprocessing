@@ -71,6 +71,7 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
 
 void writeImages(const std::array<cv::Mat, 4>& images,
     std::array<std::string, 4> paths) {
+  std::cout << "Writing images, please wait..." << std::endl;
   for (size_t i = 0; i < images.size(); ++i) {
     const cv::Mat outputImage = getProcessedImageParallel(images[i]);
     fs::path inputPath(paths[i]);

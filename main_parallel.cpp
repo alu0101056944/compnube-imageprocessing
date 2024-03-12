@@ -35,6 +35,7 @@ void printExecutionTime(const cv::Mat& image) {
 }
 
 void writeImage(const cv::Mat& image, const fs::path& path) {
+  std::cout << "Writing image, please wait..." << std::endl;
   const cv::Mat outputImage = getProcessedImageParallel(image);
   const std::string kOutputPath = (path.parent_path() / path.stem())
       .string() + "_processed" + path.extension().string();

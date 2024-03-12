@@ -7,9 +7,9 @@
 [[nodiscard]] cv::Mat getProcessedImageParallel(const cv::Mat& image) {
   cv::Mat outputImage = image.clone();
 
-  const int kIntensityLevels = 40;
+  const int kIntensityLevels = 20;
+  const int kRadius = 5;
 
-  const int kRadius = 3;
 #pragma omp parallel for shared(outputImage, image)
   for (int i = 0; i < image.rows; ++i) {
     for (int j = 0; j < image.cols; ++j) {
