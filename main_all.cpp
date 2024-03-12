@@ -35,8 +35,8 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
     }
     gettimeofday(timeEnd, NULL);
 
-    double kEjecutionTime = time_end->tv_sec - time_init->tv_sec +
-        (time_end->tv_usec - time_init->tv_usec) / 1.0e6;
+    double kEjecutionTime = timeEnd->tv_sec - timeInit->tv_sec +
+        (timeEnd->tv_usec - timeInit->tv_usec) / 1.0e6;
     const cv::Mat tempImage = getProcessedImageSequential(image);
     std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t\t";
     std::cout << kEjecutionTime / kAmountOfIterations << std::endl;
@@ -57,8 +57,8 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
       }
       gettimeofday(timeEnd, NULL);
 
-      double kEjecutionTime = time_end->tv_sec - time_init->tv_sec +
-          (time_end->tv_usec - time_init->tv_usec) / 1.0e6;
+      double kEjecutionTime = timeEnd->tv_sec - timeInit->tv_sec +
+          (timeEnd->tv_usec - timeInit->tv_usec) / 1.0e6;
       const cv::Mat tempImage = getProcessedImageParallel(images[i]);
       std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t\t";
       std::cout << threadAmount << "\t\t\t";
