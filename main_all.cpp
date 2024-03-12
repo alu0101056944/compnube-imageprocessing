@@ -68,8 +68,8 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
       const cv::Mat tempImage = getProcessedImageParallel(images[i]);
       std::cout << std::setw(4) << std::left << tempImage.rows << "x"
                 << std::setw(6) << std::left << tempImage.cols
-                << std::setw(10) << std::left << threadAmount
-                << std::setw(14) << std::left << executionTimesSequential[i]
+                << std::setw(15) << std::left << threadAmount
+                << std::setw(18) << std::left << executionTimesSequential[i]
                 << std::setw(14) << std::left << kSpeedUp << std::endl;
     }
   }
