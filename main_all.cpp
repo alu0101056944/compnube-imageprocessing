@@ -48,7 +48,7 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
 
   std::cout << "Paralell:" << std::endl
             << "Size \t ThreadAmount \t Exec.Time(Seq)"
-            << "\t Exec. Time (Paral) \t Speed_up" << std::endl;
+            << "\t Exec. Time (Paral) \t Speed_up \t Efficiency" << std::endl;
   std::array<int, 4> threadAmounts = {2, 4, 8, 16};
   for (size_t i = 0; i < images.size(); i++) {
     for (int threadAmount : threadAmounts) {
@@ -65,14 +65,16 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
           (timeEnd->tv_usec - timeInit->tv_usec) / 1.0e6;
       const double kSpeedUp = executionTimesSequential[i] /
           (kEjecutionTime / kAmountOfIterations);
+      const int kEfficiency = (kSpeedUp / threadAmount) * 100;
 
       const cv::Mat tempImage = getProcessedImageParallel(images[i]);
       std::cout << std::setw(4) << std::left << tempImage.rows << "x"
                 << std::setw(6) << std::left << tempImage.cols
-                << std::setw(15) << std::left << threadAmount
-                << std::setw(18) << std::left << executionTimesSequential[i]
-                << std::setw(18) << std::left << kEjecutionTime / kAmountOfIterations
-                << std::setw(14) << std::left << kSpeedUp << std::endl;
+                << std::setw(14) << std::left << threadAmount
+                << std::setw(17) << std::left << executionTimesSequential[i]
+                << std::setw(23) << std::left << kEjecutionTime / kAmountOfIterations
+                << std::setw(14) << std::left << kSpeedUp
+                << kEfficiency << std::endl;
     }
   }
 }
