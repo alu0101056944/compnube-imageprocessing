@@ -56,7 +56,7 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
 
       struct timeval timeInit[1], timeEnd[1];
       gettimeofday(timeInit, NULL);
-      for (size_t i = 0; i < kAmountOfIterations; ++i) {
+      for (size_t j = 0; j < kAmountOfIterations; ++j) {
         const cv::Mat processedImage = getProcessedImageParallel(images[i]);
       }
       gettimeofday(timeEnd, NULL);
