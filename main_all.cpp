@@ -23,10 +23,10 @@
 namespace fs = std::filesystem;
 
 void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
-  const int kAmountOfIterations = 5;
+  const int kAmountOfIterations = 1;
 
   std::cout << "Sequential:" << std::endl
-            << "Size \t\t Exec.Time (Seconds)" << std::endl;
+            << "Size \t Exec.Time (Seconds)" << std::endl;
   std::vector<double> executionTimesSequential;
   for (const cv::Mat& image : images) {
     struct timeval timeInit[1], timeEnd[1];
@@ -39,7 +39,7 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
     double kEjecutionTime = timeEnd->tv_sec - timeInit->tv_sec +
         (timeEnd->tv_usec - timeInit->tv_usec) / 1.0e6;
     const cv::Mat tempImage = getProcessedImageSequential(image);
-    std::cout << std::setw(10) << std::left << tempImage.rows << "x"
+    std::cout << tempImage.rows << "x" << std::setw(6) << std::left
               << tempImage.cols << std::setw(12) << std::left
               << kEjecutionTime / kAmountOfIterations << std::endl;
     executionTimesSequential.push_back(kEjecutionTime / kAmountOfIterations);
