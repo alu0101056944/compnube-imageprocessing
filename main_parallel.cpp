@@ -9,6 +9,7 @@
 #include <string>
 #include <chrono>
 #include <filesystem>
+#include <sys/time.h>
 
 #include <opencv2/opencv.hpp>
 
@@ -18,19 +19,23 @@ namespace fs = std::filesystem;
 
 void printExecutionTime(const cv::Mat& image) {
   const int kAmountOfIterations = 5;
-  auto t1 = std::chrono::high_resolution_clock::now();
+
+  struct timeval timeInit[1], timeEnd[1];
+  gettimeofday(timeInit, NULL);
   for (size_t i = 0; i < kAmountOfIterations; ++i) {
     const cv::Mat processedImage = getProcessedImageParallel(image);
   }
-  auto t2 = std::chrono::high_resolution_clock::now();
+  gettimeofday(timeEnd, NULL);
 
-  auto timeSpan =
-      std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
-  std::cout << timeSpan.count() / kAmountOfIterations;
+
+  double kEjecutionTime = timeEnd->tv_sec - timeInit->tv_sec +
+      (timeEnd->tv_usec - timeInit->tv_usec) / 1.0e6;
+  std::cout << kEjecutionTime / kAmountOfIterations;
   std::cout << " seconds. (Execution time)" << std::endl;
 }
 
 void writeImage(const cv::Mat& image, const fs::path& path) {
+  std::cout << "Writing image, please wait..." << std::endl;
   const cv::Mat outputImage = getProcessedImageParallel(image);
   const std::string kOutputPath = (path.parent_path() / path.stem())
       .string() + "_processed" + path.extension().string();

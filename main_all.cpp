@@ -12,6 +12,8 @@
 #include <array>
 #include <vector>
 #include <omp.h>
+#include <sys/time.h>
+#include <iomanip>
 
 #include <opencv2/opencv.hpp>
 
@@ -23,51 +25,63 @@ namespace fs = std::filesystem;
 void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
   const int kAmountOfIterations = 5;
 
-  std::cout << "Sequential:" << std::endl;
-  std::cout << "Size \t\t T. Exec (Seconds)" << std::endl;
+  std::cout << "Sequential:" << std::endl
+            << "Size \t Exec.Time (Seconds)" << std::endl;
   std::vector<double> executionTimesSequential;
   for (const cv::Mat& image : images) {
-    auto t1 = std::chrono::high_resolution_clock::now();
+    struct timeval timeInit[1], timeEnd[1];
+    gettimeofday(timeInit, NULL);
     for (size_t i = 0; i < kAmountOfIterations; ++i) {
       const cv::Mat processedImage = getProcessedImageSequential(image);
     }
-    auto t2 = std::chrono::high_resolution_clock::now();
+    gettimeofday(timeEnd, NULL);
 
+    double kEjecutionTime = timeEnd->tv_sec - timeInit->tv_sec +
+        (timeEnd->tv_usec - timeInit->tv_usec) / 1.0e6;
     const cv::Mat tempImage = getProcessedImageSequential(image);
-    std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t\t";
-    auto timeSpan =
-        std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
-    std::cout << timeSpan.count() / kAmountOfIterations << std::endl;
-    executionTimesSequential.push_back(timeSpan.count() / kAmountOfIterations);
+    std::cout << std::setw(4) << std::left << tempImage.rows << "x"
+              << std::setw(6) << std::left << tempImage.cols
+              << std::setw(12) << std::left << kEjecutionTime / kAmountOfIterations
+              << std::endl;
+    executionTimesSequential.push_back(kEjecutionTime / kAmountOfIterations);
   }
 
-  std::cout << "Paralell:" << std::endl;
-  std::cout << "Size \t\t\t ThreadAmount \t\t Speed_up" << std::endl;
+  std::cout << "Paralell:" << std::endl
+            << "Size \t ThreadAmount \t Exec.Time(Seq)"
+            << "\t Exec. Time (Paral) \t Speed_up \t Efficiency" << std::endl;
   std::array<int, 4> threadAmounts = {2, 4, 8, 16};
   for (size_t i = 0; i < images.size(); i++) {
     for (int threadAmount : threadAmounts) {
       omp_set_num_threads(threadAmount);
 
-      auto t1 = std::chrono::high_resolution_clock::now();
-      for (size_t i = 0; i < kAmountOfIterations; ++i) {
+      struct timeval timeInit[1], timeEnd[1];
+      gettimeofday(timeInit, NULL);
+      for (size_t j = 0; j < kAmountOfIterations; ++j) {
         const cv::Mat processedImage = getProcessedImageParallel(images[i]);
       }
-      auto t2 = std::chrono::high_resolution_clock::now();
+      gettimeofday(timeEnd, NULL);
+
+      double kEjecutionTime = timeEnd->tv_sec - timeInit->tv_sec +
+          (timeEnd->tv_usec - timeInit->tv_usec) / 1.0e6;
+      const double kSpeedUp = executionTimesSequential[i] /
+          (kEjecutionTime / kAmountOfIterations);
+      const int kEfficiency = (kSpeedUp / threadAmount) * 100;
 
       const cv::Mat tempImage = getProcessedImageParallel(images[i]);
-      std::cout << tempImage.rows << "x" << tempImage.cols << "\t\t\t";
-      std::cout << threadAmount << "\t\t\t";
-      auto timeSpan =
-          std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
-      const double kSpeedUp = executionTimesSequential[i] /
-          (timeSpan.count() / kAmountOfIterations);
-      std::cout << kSpeedUp << std::endl;
+      std::cout << std::setw(4) << std::left << tempImage.rows << "x"
+                << std::setw(6) << std::left << tempImage.cols
+                << std::setw(14) << std::left << threadAmount
+                << std::setw(17) << std::left << executionTimesSequential[i]
+                << std::setw(23) << std::left << kEjecutionTime / kAmountOfIterations
+                << std::setw(14) << std::left << kSpeedUp
+                << kEfficiency << std::endl;
     }
   }
 }
 
 void writeImages(const std::array<cv::Mat, 4>& images,
     std::array<std::string, 4> paths) {
+  std::cout << "Writing images, please wait..." << std::endl;
   for (size_t i = 0; i < images.size(); ++i) {
     const cv::Mat outputImage = getProcessedImageParallel(images[i]);
     fs::path inputPath(paths[i]);
