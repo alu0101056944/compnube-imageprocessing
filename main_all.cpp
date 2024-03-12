@@ -23,7 +23,7 @@
 namespace fs = std::filesystem;
 
 void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
-  const int kAmountOfIterations = 1;
+  const int kAmountOfIterations = 5;
 
   std::cout << "Sequential:" << std::endl
             << "Size \t Exec.Time (Seconds)" << std::endl;
