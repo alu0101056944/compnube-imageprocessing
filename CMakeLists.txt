@@ -25,4 +25,5 @@ target_link_libraries(main_mpi ${OpenCV_LIBS})
 add_executable(main_all main_all.cpp
     src/image_process_sequential.cpp src/image_process_parallel.cpp)
 target_compile_features(main_all PRIVATE cxx_std_17)
+target_compile_options(main_all PRIVATE "-fopenmp")
 target_link_libraries(main_all ${OpenCV_LIBS})
