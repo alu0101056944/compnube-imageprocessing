@@ -23,7 +23,7 @@ add_executable(main_mpi main_mpi.cpp
 src/image_process_mpi.cpp)
 target_compile_features(main_mpi PRIVATE cxx_std_17)
 target_link_libraries(main_mpi ${OpenCV_LIBS})
-target_link_directories(${MPI_C_INCLUDE_PATH})
+include_directories(${MPI_C_INCLUDE_PATH})
 target_link_libraries(main_mpi ${MPI_C_LIBRARIES})
 
 add_executable(main_all main_all.cpp
