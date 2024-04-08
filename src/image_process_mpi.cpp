@@ -7,7 +7,6 @@
 #include <vector>
 
 #include <opencv2/opencv.hpp>
-#include "mpi.h"
 
 // return is a chunk
 [[nodiscard]] std::vector<double> getProcessedImageParallelMPI(

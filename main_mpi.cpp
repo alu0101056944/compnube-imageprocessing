@@ -12,6 +12,7 @@
 #include <vector>
 #include <sys/time.h>
 
+#include "mpi.h"
 #include <opencv2/opencv.hpp>
 
 #include "includes/image_process_mpi.h"
