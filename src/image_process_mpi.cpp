@@ -13,7 +13,7 @@
     const std::vector<double>& full, int startPos, int endPos) {
   std::vector<double> outputPixels(endPos - startPos + 1); // resize
   
-  srand(time(0))
+  srand(time(0));
   for (int i = startPos; i < std::min(image.cols * image.rows, endPos); ++i) {
     outputPixels.push(-7);
   }
