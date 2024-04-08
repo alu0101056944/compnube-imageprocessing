@@ -15,7 +15,7 @@
   
   srand(time(0));
   for (int i = startPos; i < std::min(120, endPos); ++i) {
-    outputPixels.push(-7);
+    outputPixels.push_back(-7);
   }
 
   return outputPixels;
