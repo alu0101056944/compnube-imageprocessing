@@ -7,8 +7,9 @@
 #ifndef IMAGE_PROCESS_PARALELL_MPI
 #define IMAGE_PROCESS_PARALELL_MPI
 
+#include <vector>
 #include <opencv2/opencv.hpp>
 
-[[nodiscard]] cv::Mat getProcessedImageParallelMPI(const cv::Mat& image);
+[[nodiscard]] std::vector<double> getProcessedImageParallelMPI(const cv::Mat& image);
 
 #endif
