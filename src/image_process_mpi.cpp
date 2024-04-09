@@ -12,7 +12,7 @@
 [[nodiscard]] std::vector<double> getProcessedImageParallelMPI(
     const std::vector<double>& full, int startPos, int endPos) {
   std::vector<double> outputPixels(endPos - startPos + 1); // resize
-  
+
   srand(time(0));
   for (int i = startPos; i < std::min(120, endPos); ++i) {
     outputPixels.push_back(-7);
