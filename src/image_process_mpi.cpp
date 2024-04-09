@@ -13,8 +13,7 @@
     const std::vector<double>& full, int startPos, int endPos) {
   std::vector<double> outputPixels(endPos - startPos + 1); // resize
 
-  srand(time(0));
-  for (int i = startPos; i < std::min((int)full.size(), endPos + 1); ++i) {
+  for (int i = 0; i < outputPixels.size(); ++i) {
     outputPixels[i] = -7;
   }
 
