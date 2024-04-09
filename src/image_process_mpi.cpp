@@ -14,8 +14,8 @@
   std::vector<double> outputPixels(endPos - startPos + 1); // resize
 
   srand(time(0));
-  for (int i = startPos; i < std::min(120, endPos); ++i) {
-    outputPixels.push_back(-7);
+  for (int i = startPos; i < std::min(120, endPos + 1); ++i) {
+    outputPixels[i] = -7;
   }
 
   return outputPixels;

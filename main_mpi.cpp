@@ -13,11 +13,11 @@
 #include <sys/time.h>
 
 // for gdb attaching
-#include <stdio.h>      // For printf()
-#include <unistd.h>     // For getpid(), sleep()
-#include <stdlib.h>     // For exit()
-#include <limits.h>     // For HOST_NAME_MAX
-#include <sys/utsname.h> // For gethostname()
+// #include <stdio.h>      // For printf()
+// #include <unistd.h>     // For getpid(), sleep()
+// #include <stdlib.h>     // For exit()
+// #include <limits.h>     // For HOST_NAME_MAX
+// #include <sys/utsname.h> // For gethostname()
 
 #include "mpi.h"
 #include <opencv2/opencv.hpp>
@@ -52,17 +52,17 @@ int main(int argc, char** argv) {
     const int kStartPixel = rank * kChunkSize;
     const int kEndPixel = rank * kChunkSize + kChunkSize - 1;
 
-    if (rank == 0) {
-      {
-        volatile int i = 0;
-        char hostname[256];
-        gethostname(hostname, sizeof(hostname));
-        printf("PID %d on %s ready for attach\n", getpid(), hostname);
-        fflush(stdout);
-        while (0 == i)
-            sleep(5);
-      }
-    }
+    // if (rank == 0) {
+    //   {
+    //     volatile int i = 0;
+    //     char hostname[256];
+    //     gethostname(hostname, sizeof(hostname));
+    //     printf("PID %d on %s ready for attach\n", getpid(), hostname);
+    //     fflush(stdout);
+    //     while (0 == i)
+    //         sleep(5);
+    //   }
+    // }
 
     std::vector<double> chunk =
         getProcessedImageParallelMPI(fullMatrix, kStartPixel, kEndPixel);
@@ -81,12 +81,12 @@ int main(int argc, char** argv) {
         kChunkSize, MPI_DOUBLE, 0, MPI_COMM_WORLD);
   }
 
-  // if (rank == 0) {
-  //   for (size_t i = 0; i < fullMatrix.size(); ++i) {
-  //     std::cout << fullMatrix[i] << " ";
-  //   }
-  //   std::cout << std::endl;
-  // }
+  if (rank == 0) {
+    for (size_t i = 0; i < fullMatrix.size(); ++i) {
+      std::cout << fullMatrix[i] << " ";
+    }
+    std::cout << std::endl;
+  }
 
   MPI_Finalize();
   return 0;
