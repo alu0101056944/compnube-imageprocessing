@@ -55,12 +55,12 @@ int main(int argc, char** argv) {
         kChunkSize, MPI_DOUBLE, 0, MPI_COMM_WORLD);
   }
 
-  if (rank == 0) {
-    for (size_t i = 0; i < fullMatrix.size(); ++i) {
-      std::cout << fullMatrix[i] << " ";
-    }
-    std::cout << std::endl;
-  }
+  // if (rank == 0) {
+  //   for (size_t i = 0; i < fullMatrix.size(); ++i) {
+  //     std::cout << fullMatrix[i] << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
 
   MPI_Finalize();
   return 0;
