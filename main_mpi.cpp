@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
     for (size_t i = 0; i < chunk.size(); ++i) {
       std::cout << chunk[i] << " ";
     }
-    std::cout << std::endl;
+    std::cout << "|   ";
     MPI_Gather(chunk.data(), kChunkSize, MPI_DOUBLE, fullMatrix.data() + kStartPixel,
         kChunkSize, MPI_DOUBLE, 0, MPI_COMM_WORLD);
   }
