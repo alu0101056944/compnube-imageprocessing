@@ -51,8 +51,6 @@ int main(int argc, char** argv) {
   } else {
     const int kStartPixel = rank * kChunkSize;
     const int kEndPixel = rank * kChunkSize + kChunkSize - 1;
-    std::vector<double> chunk =
-        getProcessedImageParallelMPI(fullMatrix, kStartPixel, kEndPixel);
 
     if (rank == 0) {
       {
@@ -65,6 +63,9 @@ int main(int argc, char** argv) {
             sleep(5);
       }
     }
+
+    std::vector<double> chunk =
+        getProcessedImageParallelMPI(fullMatrix, kStartPixel, kEndPixel);
 
     if (rank == 3) {
       std::cout << "size: " << chunk.size() << std::endl;
