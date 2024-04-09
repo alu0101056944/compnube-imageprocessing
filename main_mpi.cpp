@@ -73,6 +73,13 @@ int main(int argc, char** argv) {
       std::cout << "|   ";
     }
     
+    /**
+     * 
+     * WIP: For the final solution just make the algorithm store in a kChunkSize * 3
+     *  vector and send it whole and then interpret in the receptor that as 3 chunks,
+     *  one for each channel.
+     */
+
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Gather(chunk.data(), kChunkSize, MPI_DOUBLE, fullMatrix.data() + kStartPixel,
         kChunkSize, MPI_DOUBLE, 0, MPI_COMM_WORLD);
