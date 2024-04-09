@@ -12,6 +12,13 @@
 #include <vector>
 #include <sys/time.h>
 
+// for gdb attaching
+#include <stdio.h>      // For printf()
+#include <unistd.h>     // For getpid(), sleep()
+#include <stdlib.h>     // For exit()
+#include <limits.h>     // For HOST_NAME_MAX
+#include <sys/utsname.h> // For gethostname()
+
 #include "mpi.h"
 #include <opencv2/opencv.hpp>
 
@@ -46,12 +53,6 @@ int main(int argc, char** argv) {
     const int kEndPixel = rank * kChunkSize + kChunkSize - 1;
     std::vector<double> chunk =
         getProcessedImageParallelMPI(fullMatrix, kStartPixel, kEndPixel);
-
-    #include <stdio.h>      // For printf()
-    #include <unistd.h>     // For getpid(), sleep()
-    #include <stdlib.h>     // For exit()
-    #include <limits.h>     // For HOST_NAME_MAX
-    #include <sys/utsname.h> // For gethostname()
 
     if (rank == 0) {
       {
