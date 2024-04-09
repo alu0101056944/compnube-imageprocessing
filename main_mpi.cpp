@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
     std::vector<double> chunk =
         getProcessedImageParallelMPI(fullMatrix, kStartPixel, kEndPixel);
 
-    if (rank === 0) {
+    if (rank == 0) {
       {
         volatile int i = 0;
         char hostname[256];
