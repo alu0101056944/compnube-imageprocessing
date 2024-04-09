@@ -12,7 +12,6 @@
 #include <vector>
 #include <sys/time.h>
 
-for gdb attaching
 #include <stdio.h>      // For printf()
 #include <unistd.h>     // For getpid(), sleep()
 #include <stdlib.h>     // For exit()
