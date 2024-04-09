@@ -38,16 +38,16 @@ int main(int argc, char** argv) {
       const int kEndPixel = rank;
       std::vector<double> chunk =
         getProcessedImageParallelMPI(fullMatrix, kStartPixel, kEndPixel);
-      MPI_Gather(chunk.data(), 1, MPI_DOUBLE, fullMatrix.data(), 1, MPI_DOUBLE, 0,
-          MPI_COMM_WORLD);
+      MPI_Gather(chunk.data(), 1, MPI_DOUBLE, fullMatrix.data() + kStartPixel, 1,
+          MPI_DOUBLE, 0, MPI_COMM_WORLD);
     }
   } else {
     const int kStartPixel = rank * kChunkSize;
     const int kEndPixel = rank * kChunkSize + kChunkSize - 1;
     std::vector<double> chunk =
         getProcessedImageParallelMPI(fullMatrix, kStartPixel, kEndPixel);
-    MPI_Gather(chunk.data(), kChunkSize, MPI_DOUBLE, fullMatrix.data(), kChunkSize,
-        MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Gather(chunk.data(), kChunkSize, MPI_DOUBLE, fullMatrix.data() + kStartPixel,
+        kChunkSize, MPI_DOUBLE, 0, MPI_COMM_WORLD);
   }
 
   if (rank == 0) {
