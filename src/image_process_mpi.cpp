@@ -123,5 +123,6 @@ cv::Mat getProcessedImageParallelMPI(const cv::Mat& image, int rank, int size) {
 
   MPI_Barrier(MPI_COMM_WORLD);
 
-  return cv::Mat(3, {2, 2, 2}, cv::CV_64FC3, imageAsVector.data());
+  // return cv::Mat(3, {2, 2, 2}, cv::CV_64FC3, imageAsVector.data());
+  return cv::Mat();
 }
