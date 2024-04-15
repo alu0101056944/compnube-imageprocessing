@@ -11,6 +11,6 @@
 #include <opencv2/opencv.hpp>
 
 [[nodiscard]] cv::Mat getProcessedImageParallelMPI(const cv::Mat& image, int rank, int size);
-[[nodiscard]] cv::Mat getImageChunk(const cv::Mat& image, int startPixel, int endPixel);
+[[nodiscard]] std::vector<double> getImageChunk(const cv::Mat& image, int startPixel, int endPixel);
 
 #endif
