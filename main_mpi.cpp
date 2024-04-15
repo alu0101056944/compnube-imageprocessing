@@ -12,11 +12,11 @@
 #include <vector>
 #include <sys/time.h>
 
-#include <stdio.h>      // For printf()
-#include <unistd.h>     // For getpid(), sleep()
-#include <stdlib.h>     // For exit()
-#include <limits.h>     // For HOST_NAME_MAX
-#include <sys/utsname.h> // For gethostname()
+// #include <stdio.h>      // For printf()
+// #include <unistd.h>     // For getpid(), sleep()
+// #include <stdlib.h>     // For exit()
+// #include <limits.h>     // For HOST_NAME_MAX
+// #include <sys/utsname.h> // For gethostname()
 
 #include <opencv2/opencv.hpp>
 #include "mpi.h"
@@ -75,15 +75,15 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  {
-      volatile int i = 0;
-      char hostname[256];
-      gethostname(hostname, sizeof(hostname));
-      printf("PID %d on %s ready for attach\n", getpid(), hostname);
-      fflush(stdout);
-      while (0 == i)
-          sleep(5);
-    }
+  // {
+  //     volatile int i = 0;
+  //     char hostname[256];
+  //     gethostname(hostname, sizeof(hostname));
+  //     printf("PID %d on %s ready for attach\n", getpid(), hostname);
+  //     fflush(stdout);
+  //     while (0 == i)
+  //         sleep(5);
+  //   }
 
   printExecutionTime(image, rank, size);
   writeImage(image, inputPath, rank, size);
