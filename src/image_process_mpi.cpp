@@ -112,7 +112,7 @@ cv::Mat getProcessedImageParallelMPI(const cv::Mat& image, int rank, int size) {
     const int kStartPixel = rank * kChunkSize;
     const int kEndPixel = rank * kChunkSize + kChunkSize - 1;
     std::vector<double> chunk = getImageChunk(image, kStartPixel, kEndPixel);
-    for (size_t j = 0; j < size; j++) {
+    for (int j = 0; j < size; j++) {
       for (size_t i = 0; i < 3; ++i) {
         MPI_Gather(chunk.data(), chunk.size(), MPI_DOUBLE,
             (imageAsVector.data() + (kStartPixel * 3)) + i, chunk.size(),
