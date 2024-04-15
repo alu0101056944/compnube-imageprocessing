@@ -10,7 +10,7 @@
 
 [[nodiscard]] std::vector<double> getImageChunk(const cv::Mat& image,
     int startPixel, int endPixel) {
-  std::vector<double> outputChunk((endPixel - startPixel + 1) * 3); // resize. 3 because 3 channels.
+  std::vector<double> outputChunk;
 
   // I should change the otput structure so that each pixel has the values for its channels
   // consecutively instead of separating the whole output with whole areas per channel.
@@ -81,9 +81,9 @@
     const int kBFinal =
         colorTotalsB[maximumIntensity] / intensityCount[maximumIntensity];
 
-    outputChunk[i * 3] = kRFinal;
-    outputChunk[i * 3 + 1] = kGFinal;
-    outputChunk[i * 3 + 2] = kBFinal;
+    outputChunk.push_back(kRFinal);
+    outputChunk.push_back(kGFinal);
+    outputChunk.push_back(kBFinal);
   }
 
   return outputChunk;
@@ -105,7 +105,7 @@ cv::Mat getProcessedImageParallelMPI(const cv::Mat& image, int rank, int size) {
       for (int j = 0; j < size; j++) {
         for (int i = 0; i < 3; ++i) {
           MPI_Gather(chunk.data(), 3, MPI_DOUBLE,
-              (imageAsVector.data() + (kStartPixel * 3)) + i, 3, MPI_DOUBLE,
+              imageAsVector.data() + kStartPixel, 3,
                   j, MPI_COMM_WORLD);
         }
       }
@@ -117,7 +117,7 @@ cv::Mat getProcessedImageParallelMPI(const cv::Mat& image, int rank, int size) {
     for (int j = 0; j < size; j++) {
       for (size_t i = 0; i < 3; ++i) {
         MPI_Gather(chunk.data(), chunk.size(), MPI_DOUBLE,
-            (imageAsVector.data() + (kStartPixel * 3)) + i, chunk.size(),
+            imageAsVector.data() + kStartPixel, chunk.size(),
                 MPI_DOUBLE, j, MPI_COMM_WORLD);
       }
     }
