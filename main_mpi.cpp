@@ -44,7 +44,7 @@ void writeImage(const cv::Mat& image, const fs::path& path, int rank, int size) 
 }
 
 int main(int argc, char** argv) {
-  if (argc < 2) {
+  if (argc < 1) {
     std::cout << "Expected 2 arguments, given " << argc << "." << std::endl;
     return -1;
   }
