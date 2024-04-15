@@ -123,6 +123,6 @@ cv::Mat getProcessedImageParallelMPI(const cv::Mat& image, int rank, int size) {
 
   MPI_Barrier(MPI_COMM_WORLD);
 
-  int[3] dimensions = {2, 2, 2};
+  int dimensions[3] = {2, 2, 2};
   return cv::Mat(3, dimensions, cv::CV_64FC3, imageAsVector.data());
 }
