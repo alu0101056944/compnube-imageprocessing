@@ -13,6 +13,7 @@
 #include <sys/time.h>
 
 #include <opencv2/opencv.hpp>
+#include "mpi.h"
 
 #include "includes/image_process_mpi.h"
 
