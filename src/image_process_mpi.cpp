@@ -95,6 +95,8 @@ cv::Mat getProcessedImageParallelMPI(const cv::Mat& image, int rank, int size) {
 
   std::vector<double> imageAsVector(kSize * 3); // because 3 channels
 
+  MPI_Barrier(MPI_COMM_WORLD);
+
   if (kChunkSize < 1) {
     if (rank < kSize) {
       const int kStartPixel = rank;
