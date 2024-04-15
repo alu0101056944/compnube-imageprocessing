@@ -18,15 +18,13 @@
 
 namespace fs = std::filesystem;
 
-std::vector calculateAndPrint(const cv::Mat& image, int startPixel, int endPixel) {
+void printExecutionTime(const cv::Mat& image, int rank, int size) {
   const int kAmountOfIterations = 5;
 
   struct timeval timeInit[1], timeEnd[1];
   gettimeofday(timeInit, NULL);
   for (size_t i = 0; i < kAmountOfIterations; ++i) {
-    // WIP HERE
-    std::vector<double> processedImage =
-        getProcessedImageParallelMPI(image, startPixel, endPixel);
+    getProcessedImageParallelMPI(image, rank, size);    
   }
   gettimeofday(timeEnd, NULL);
 
@@ -36,25 +34,9 @@ std::vector calculateAndPrint(const cv::Mat& image, int startPixel, int endPixel
   std::cout << " seconds. (Execution time)" << std::endl;
 }
 
-void printExecutionTime(const cv::Mat& image, int rank, int size) {
-  const int kChunkSize = (image.cols * image.rows) / size;
-  if (kChunkSize < 1) {
-    const int kImageSize = (image.rows * image.cols);
-    if (rank < kImageSize) {
-      const int kStartPixel = rank;
-      const int kEndPixel = rank;
-      calculateAndPrint(image, kStartPixel, kEndPixel);
-    }
-  } else {
-    const int kStartPixel = rank * kChunkSize;
-    const int kEndPixel = rank * kChunkSize + kChunkSize - 1;
-    calculateAndPrint(image, kStartPixel, kEndPixel);
-  }
-}
-
-void writeImage(const cv::Mat& image, const fs::path& path) {
+void writeImage(const cv::Mat& image, const fs::path& path, int rank, int size) {
   std::cout << "Writing image, please wait..." << std::endl;
-  const cv::Mat outputImage = getProcessedImageParallelMPI(image);
+  const cv::Mat outputImage = getProcessedImageParallelMPI(image, rank, size);
   const std::string kOutputPath = (path.parent_path() / path.stem())
       .string() + "_processed" + path.extension().string();
   cv::imwrite(kOutputPath, outputImage);
@@ -82,7 +64,7 @@ int main(int argc, char** argv) {
   }
 
   printExecutionTime(image, rank, size);
-  writeImage(image, inputPath);
+  writeImage(image, inputPath, rank, size);
 
   MPI_Finalize();
   return 0;

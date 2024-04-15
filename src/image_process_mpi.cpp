@@ -8,9 +8,12 @@
 #include <opencv2/opencv.hpp>
 #include "mpi.h"
 
-[[nodiscard]] std::vector<double> getProcessedImageParallelMPI(const cv::Mat& image,
+[[nodiscard]] std::vector<double> getImageChunk(const cv::Mat& image,
     int startPixel, int endPixel) {
-  std::vector<double> outputPixels(endPixel - startPixel + 1); // resize
+  std::vector<double> outputChunk((endPixel - startPixel + 1) * 3); // resize. 3 because 3 channels.
+
+  // I should change the otput structure so that each pixel has the values for its channels
+  // consecutively instead of separating the whole output with whole areas per channel.
 
   const int kIntensityLevels = 20;
   const int kRadius = 5;
@@ -78,13 +81,47 @@
     const int kBFinal =
         colorTotalsB[maximumIntensity] / intensityCount[maximumIntensity];
 
-    const int kIndexForR = startPixel;
-    const int kIndexForG = startPixel + (image.rows * image.cols);
-    const int kIndexForB = startPixel + 2 * (image.rows * image.cols);
-    outputPixels[kIndexForR] = kRFinal;
-    outputPixels[kIndexForG] = kGFinal;
-    outputPixels[kIndexForB] = kBFinal;
+    outputChunk[i * 3] = kRFinal;
+    outputChunk[i * 3 + 1] = kGFinal;
+    outputChunk[i * 3 + 2] = kBFinal;
   }
 
-  return outputPixels;
+  return outputChunk;
+}
+
+cv::Mat getProcessedImageParallelMPI(const cv::Mat& image, int rank, int size) {
+  const int kSize = image.rows * image.cols;
+  const int kChunkSize = kSize / size;
+
+  std::vector<double> imageAsVector(kSize * 3); // because 3 channels
+
+  if (kChunkSize < 1) {
+    if (rank < kSize) {
+      const int kStartPixel = rank;
+      const int kEndPixel = rank;
+      std::vector<double> chunk = getImageChunk(image, kStartPixel, kEndPixel);
+      for (size_t j = 0; j < size; j++) {
+        for (size_t i = 0; i < 3; ++i) {
+          MPI_Gather(chunk.data(), 3, MPI_DOUBLE,
+              (&imageAsVector.data() + (kStartPixel * 3)) + i, 3, MPI_DOUBLE,
+                  j, MPI_COMM_WORLD);
+        }
+      }
+    }
+  } else {
+    const int kStartPixel = rank * kChunkSize;
+    const int kEndPixel = rank * kChunkSize + kChunkSize - 1;
+    std::vector<double> chunk = getImageChunk(image, kStartPixel, kEndPixel);
+    for (size_t j = 0; j < size; j++) {
+      for (size_t i = 0; i < 3; ++i) {
+        MPI_Gather(chunk.data(), chunk.size(), MPI_DOUBLE,
+            (&imageAsVector.data() + (kStartPixel * 3)) + i, chunk.size(),
+                MPI_DOUBLE, j, MPI_COMM_WORLD);
+      }
+    }
+  }
+
+  MPI_Barrier(MPI_COMM_WORLD);
+
+  return cv::Mat(3, {2, 2, 2}, cv::CV_64FC3, imageAsVector.data());
 }
