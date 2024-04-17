@@ -93,7 +93,8 @@ cv::Mat getProcessedImageParallelMPI(const cv::Mat& image, int rank, int size) {
   const int kSize = image.rows * image.cols;
   const int kChunkSize = kSize / size;
 
-  std::vector<double> imageAsVector(kSize * 3, -4); // because 3 channels
+  std::vector<double> pixelData(kSize * 3, -4); // because 3 channels
+  cv::Mat newImage(image.rows, image.cols, CV_64FC3, pixelData.data());
 
   MPI_Barrier(MPI_COMM_WORLD);
 
@@ -102,25 +103,24 @@ cv::Mat getProcessedImageParallelMPI(const cv::Mat& image, int rank, int size) {
       const int kStartPixel = rank;
       const int kEndPixel = rank;
       std::vector<double> chunk = _getImageChunk(image, kStartPixel, kEndPixel);
-      MPI_Gather(chunk.data(), 3, MPI_DOUBLE,
-          imageAsVector.data() + kStartPixel * 3, 3, MPI_DOUBLE,
-              0, MPI_COMM_WORLD);
+      MPI_Gather(chunk.data(), 3, MPI_DOUBLE, pixelData.data() + kStartPixel * 3,
+          3, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     }
   } else {
     const int kStartPixel = rank * kChunkSize;
     const int kEndPixel = rank * kChunkSize + kChunkSize - 1;
     std::vector<double> chunk = _getImageChunk(image, kStartPixel, kEndPixel);
     MPI_Gather(chunk.data(), chunk.size(), MPI_DOUBLE,
-        imageAsVector.data() + kStartPixel * 3, chunk.size(),
-            MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        pixelData.data() + kStartPixel * 3, chunk.size(), MPI_DOUBLE, 0,
+            MPI_COMM_WORLD);
   }
 
   MPI_Barrier(MPI_COMM_WORLD);
 
-  MPI_Bcast(imageAsVector.data(), imageAsVector.size(), MPI_DOUBLE, 0,
-      MPI_COMM_WORLD);
-    
-  cv::Mat outputImage = cv::Mat(image.rows, image.cols, CV_64FC3,
-      imageAsVector.data()); // this is just structure referencing the data
-  return outputImage.clone(); // this copies the data, which is what I WANT
+  MPI_Bcast(pixelData.data(), pixelData.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+  // because Mat only points to the data, so need to copy it
+  cv::Mat outputImage(image.rows, image.cols);
+  newImage.copyTo(outputImage);
+  return outputImage;
 }
