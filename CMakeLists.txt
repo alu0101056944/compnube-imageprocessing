@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.0.0)
-project(main VERSION 0.1.0)
+cmake_minimum_required(VERSION 3.9.0)
+project(main VERSION 0.3.0)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
