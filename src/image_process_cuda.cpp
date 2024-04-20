@@ -1,21 +1,23 @@
-#include "../includes/image_process_mpi.h"
+#include "../includes/image_process_cuda.h"
 
 #include <algorithm>
 #include <math.h>
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+
 #include <opencv2/opencv.hpp>
-#include "mpi.h"
 
-[[nodiscard]] std::vector<double> _getImageChunk(const cv::Mat& image,
-    int startPixel, int endPixel) {
-  std::vector<double> outputChunk;
-
+__global__ void _getImageChunk(const cv::Mat& image,
+    std::vector<double>& pixelData) {
   const int kIntensityLevels = 20;
   const int kRadius = 5;
+  const int kGridIdx = (blockIdx.y * gridDim.x) + blockIdx.x;
+  const int kBlock = kGridIdx * blockDim.x * blockDim.y;
+  const int kThreadId = threadIdx.y * blockDim.x + threadIdx.x;
+  const int kPixelIndex = kBlock + kThreadId;
 
-  for (int i = startPixel; i <= std::min((image.cols * image.rows) - 1, endPixel); ++i) {
+  if (kPixelIndex <= std::min((image.cols * image.rows) - 1)) {
     const int kRow = floor(i / image.cols);
     const int kColumn = i % image.cols;
 
@@ -78,43 +80,21 @@
     const int kBFinal =
         colorTotalsB[maximumIntensity] / intensityCount[maximumIntensity];
 
-    outputChunk.push_back(kBFinal);
-    outputChunk.push_back(kGFinal);
-    outputChunk.push_back(kRFinal);
+    pixelData[kStartPixel * 3] = kBFinal;
+    pixelData[kStartPixel * 3 + 1] = kBFinal;
+    pixelData[kStartPixel * 3 + 2] = kBFinal;
   }
-
-  return outputChunk;
 }
 
-cv::Mat getProcessedImageParallelMPI(const cv::Mat& image, int rank, int size) {
+cv::Mat getProcessedImageParallelCUDA(const cv::Mat& image, int rank, int size) {
   const int kSize = image.rows * image.cols;
   const int kChunkSize = kSize / size;
 
   std::vector<double> pixelData(kSize * 3); // because 3 channels
   cv::Mat newImage(image.rows, image.cols, CV_64FC3, pixelData.data());
 
-  MPI_Barrier(MPI_COMM_WORLD);
-
-  if (kChunkSize < 1) {
-    if (rank < kSize) {
-      const int kStartPixel = rank;
-      const int kEndPixel = rank;
-      std::vector<double> chunk = _getImageChunk(image, kStartPixel, kEndPixel);
-      MPI_Gather(chunk.data(), 3, MPI_DOUBLE, pixelData.data() + kStartPixel * 3,
-          3, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    }
-  } else {
-    const int kStartPixel = rank * kChunkSize;
-    const int kEndPixel = rank * kChunkSize + kChunkSize - 1;
-    std::vector<double> chunk = _getImageChunk(image, kStartPixel, kEndPixel);
-    MPI_Gather(chunk.data(), chunk.size(), MPI_DOUBLE,
-        pixelData.data() + kStartPixel * 3, chunk.size(), MPI_DOUBLE, 0,
-            MPI_COMM_WORLD);
-  }
-
-  MPI_Barrier(MPI_COMM_WORLD);
-
-  MPI_Bcast(pixelData.data(), pixelData.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+  
+  <<>>_getImageChunk(image, pixelData);
 
   // because Mat only points to the data, so need to copy it
   cv::Mat outputImage(image.rows, image.cols);
