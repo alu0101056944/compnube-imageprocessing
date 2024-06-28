@@ -86,7 +86,10 @@
     "stop_token": "cpp",
     "thread": "cpp",
     "unordered_set": "cpp",
-    "xtree": "cpp"
+    "xtree": "cpp",
+    "bitset": "cpp",
+    "fstream": "cpp",
+    "typeindex": "cpp"
   },
   "cmake.generator": "Visual Studio 17 2022",
   "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"

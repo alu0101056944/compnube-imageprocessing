@@ -49,7 +49,7 @@ void printExecutionTimes(const std::array<cv::Mat, 4>& images) {
   std::cout << "Paralell:" << std::endl
             << "Size \t ThreadAmount \t Exec.Time(Seq)"
             << "\t Exec. Time (Paral) \t Speed_up \t Efficiency" << std::endl;
-  std::array<int, 4> threadAmounts = {2, 4, 8, 16};
+  std::array<int, 4> threadAmounts = {1, 2, 3, 4, 5, 6, 7, 8};
   for (size_t i = 0; i < images.size(); i++) {
     for (int threadAmount : threadAmounts) {
       omp_set_num_threads(threadAmount);
