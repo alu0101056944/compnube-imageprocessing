@@ -73,6 +73,21 @@
     "xlocnum": "cpp",
     "xloctime": "cpp",
     "xmemory": "cpp",
-    "xtr1common": "cpp"
-  }
+    "xtr1common": "cpp",
+    "cinttypes": "cpp",
+    "complex": "cpp",
+    "map": "cpp",
+    "mutex": "cpp",
+    "queue": "cpp",
+    "ranges": "cpp",
+    "set": "cpp",
+    "span": "cpp",
+    "stack": "cpp",
+    "stop_token": "cpp",
+    "thread": "cpp",
+    "unordered_set": "cpp",
+    "xtree": "cpp"
+  },
+  "cmake.generator": "Visual Studio 17 2022",
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }

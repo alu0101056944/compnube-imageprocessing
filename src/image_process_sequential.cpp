@@ -31,8 +31,7 @@
           const double kG = pixelNeighbor.val[1];
           const double kB = pixelNeighbor.val[0];
 
-          int intensity =
-              (((kR + kG + kB) / 3) * kIntensityLevels) / 255.0f;
+          int intensity = (((kR + kG + kB) / 3) * kIntensityLevels) / 255.0f;
           if (intensity > 255) {
             intensity = 255;
           }
