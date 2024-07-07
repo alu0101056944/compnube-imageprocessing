@@ -9,49 +9,48 @@
 #include <string>
 #include <chrono>
 #include <filesystem>
-#include <sys/timeb.h>
-#include <sys/types.h>
+
+#include <sys/time.h>
+#include <time.h>
 
 #include <opencv2/opencv.hpp>
 
 namespace fs = std::filesystem;
 
-// #include "includes/image_process_cuda.h"
+#include "includes/image_process_cuda.h"
 
-// void printExecutionTime(const cv::Mat& image) {
-//   const int kAmountOfIterations = 5;
+void printExecutionTime(const cv::Mat& image) {
+  const int kAmountOfIterations = 5;
 
-//   struct _timeb timeInit;
-//   struct _timeb timeEnd;
-//   _ftime(&timeInit);
-//   for (size_t i = 0; i < kAmountOfIterations; ++i) {
-//     const cv::Mat processedImage = getProcessedImageParallelCUDA(image);
-//   }
-//   _ftime(&timeEnd);
+  struct timeval timeStart[1];
+  struct timeval timeEnd[1];
 
-//   time_t kEjecutionTime = timeEnd.time - timeInit.time +
-//       (timeEnd.millitm - timeInit.millitm) / 1.0e3;
-//   std::cout << kEjecutionTime / kAmountOfIterations;
-//   std::cout << " seconds. (Execution time)" << std::endl;
-// }
+  gettimeofday(timeStart, NULL);
+  for (size_t i = 0; i < kAmountOfIterations; ++i) {
+    const cv::Mat processedImage = getProcessedImageParallelCUDA(image);
+  }
+  gettimeofday(timeEnd, NULL);
 
-// void writeImage(const cv::Mat& image, const fs::path& path) {
-//   std::cout << "Writing image, please wait..." << std::endl;
-//   const cv::Mat outputImage = getProcessedImageParallelCUDA(image);
-//   const std::string kOutputPath = (path.parent_path() / path.stem())
-//       .string() + "_processed" + path.extension().string();
-//   cv::imwrite(kOutputPath, outputImage);
-// }
+  time_t kEjecutionTime = timeEnd->tv_sec - timeStart->tv_sec +
+      (timeEnd->tv_usec - timeStart->tv_usec) / 1.0e3;
+  std::cout << kEjecutionTime / kAmountOfIterations;
+  std::cout << " seconds. (Execution time)" << std::endl;
+}
+
+void writeImage(const cv::Mat& image, const fs::path& path) {
+  std::cout << "Writing image, please wait..." << std::endl;
+  const cv::Mat outputImage = getProcessedImageParallelCUDA(image);
+  const std::string kOutputPath = (path.parent_path() / path.stem())
+      .string() + "_processed" + path.extension().string();
+  cv::imwrite(kOutputPath, outputImage);
+}
 
 int main(int argc, char** argv) {
-  std::cout << "something here" << std::endl;
   if (argc < 2) {
     std::cout << "Usage: <path to image> (expected at least one argument).";
     std::cout << std::endl;
     return -1;
   }
-
-  std::cout << "something here" << std::endl;
 
   const std::string kFilePath = argv[1];
   fs::path inputPath(kFilePath);
@@ -61,14 +60,14 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  cv::Mat image = cv::imread(kFilePath);
-  // if (image.empty()) {
-  //   std::cerr << "Error: Unable to load image." << std::endl;
-  //   return -1;
-  // }
+  cv::Mat image = cv::imread(kFilePath, cv::IMREAD_COLOR);
+  if (image.empty()) {
+    std::cerr << "Error: Unable to load image." << std::endl;
+    return -1;
+  }
 
-  // printExecutionTime(image);
-  // writeImage(image, inputPath);
+  printExecutionTime(image);
+  writeImage(image, inputPath);
 
   return 0;
 }

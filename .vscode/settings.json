@@ -89,7 +89,11 @@
     "xtree": "cpp",
     "bitset": "cpp",
     "fstream": "cpp",
-    "typeindex": "cpp"
+    "typeindex": "cpp",
+    "__locale": "cpp",
+    "__node_handle": "cpp",
+    "__split_buffer": "cpp",
+    "semaphore": "cpp"
   },
   "cmake.generator": "Visual Studio 17 2022",
   "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
