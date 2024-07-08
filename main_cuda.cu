@@ -32,7 +32,7 @@ void printExecutionTime(const cv::Mat& image) {
   gettimeofday(timeEnd, NULL);
 
   time_t kEjecutionTime = timeEnd->tv_sec - timeStart->tv_sec +
-      (timeEnd->tv_usec - timeStart->tv_usec) / 1.0e3;
+      (timeEnd->tv_usec - timeStart->tv_usec) / 1.0e6;
   std::cout << kEjecutionTime / kAmountOfIterations;
   std::cout << " seconds. (Execution time)" << std::endl;
 }
