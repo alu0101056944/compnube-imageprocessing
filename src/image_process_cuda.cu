@@ -22,8 +22,9 @@ __global__ void _getImageChunk(uchar* originalData, uchar* pixelData, int rows, 
   const int kPixelIndex = kPreviousThreadAmount + kCurrentBlockThreadIndex;
 
   if (kPixelIndex < rows * cols) {
-    const int kRow = floorf(kPixelIndex / cols);
-    const int kColumn = kPixelIndex % cols;
+    const int kColumn = blockIdx.x * blockDim.x + threadIdx.x;
+    const int kRow = blockIdx.y * blockDim.y + threadIdx.y;
+    if (kColumn >= cols || kRow >= rows) return;
 
     int maximumIntensity = -1;
 
@@ -65,10 +66,9 @@ __global__ void _getImageChunk(uchar* originalData, uchar* pixelData, int rows, 
     const int kBFinal =
         colorTotalsB[maximumIntensity] / intensityCount[maximumIntensity];
 
-    const int kRowFull = floorf(kPixelIndex / step);
-    pixelData[kRowFull * step + kColumn * 3 + 2] = kRFinal;
-    pixelData[kRowFull * step + kColumn * 3 + 1] = kGFinal;
-    pixelData[kRowFull * step + kColumn * 3] = kBFinal;
+    pixelData[kRow * step + kColumn * 3 + 2] = kRFinal;
+    pixelData[kRow * step + kColumn * 3 + 1] = kGFinal;
+    pixelData[kRow * step + kColumn * 3] = kBFinal;
   }
 }
 
