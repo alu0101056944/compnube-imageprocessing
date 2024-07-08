@@ -86,6 +86,15 @@
   const int kRow = 0;
   const int kCol = 0;
 
+  cv::Vec3b& pixel = imageCopy.at<cv::Vec3b>(0, 0);
+  const double kR = pixel.val[2];
+  const double kG = pixel.val[1];
+  const double kB = pixel.val[0];
+
+  pixel.val[2] = 255;
+  pixel.val[1] = 0;
+  pixel.val[0] = 0;
+
   printf("originalimage: (0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d)\n",
     imageCopy.data[kRow * 3 + kCol * 3],
     imageCopy.data[kRow * 3 + kCol * 3 + 1],
@@ -101,9 +110,9 @@
     imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3 + 2]
   );
 
-  imageCopy.data[kRow * 3 + kCol * 3] = 0;
-  imageCopy.data[kRow * 3 + kCol * 3 + 1] = 0;
-  imageCopy.data[kRow * 3 + kCol * 3 + 2] = 255;
+  // imageCopy.data[kRow * 3 + kCol * 3] = 0;
+  // imageCopy.data[kRow * 3 + kCol * 3 + 1] = 0;
+  // imageCopy.data[kRow * 3 + kCol * 3 + 2] = 255;
 
   printf("originalimage(changed) (0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d)\n",
     imageCopy.data[kRow * 3 + kCol * 3],
@@ -119,5 +128,19 @@
     imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3 + 1],
     imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3 + 2]
   );
+
+  // use step in the code
+
+  // cv::cuda::GpuMat newGpuImage(image.rows, image.cols, CV_8UC3);
+  // newGpuImage.upload(imageCopy);
+
+  // const int kThreadAmountPerBlock = 32 * 32;
+  // const int kBlockAmount =
+  //     ceil(((float)image.rows * (float)image.cols) / kThreadAmountPerBlock);
+  // dim3 threadsPerBlock(32, 32);
+  // _getImageChunk<<<kBlockAmount, threadsPerBlock>>>(imageCopy.data,
+  //     newGpuImage.data, image.rows, image.cols);
+
+  // newGpuImage.download(imageCopy);
   return imageCopy;
 }
