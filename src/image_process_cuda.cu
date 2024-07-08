@@ -89,43 +89,83 @@ cv::Mat getProcessedImageParallelCUDA(const cv::Mat& image) {
   const double kG = pixel.val[1];
   const double kB = pixel.val[0];
 
+  cv::Vec3b& pixel2 = imageCopy.at<cv::Vec3b>(1, 0);
+  const double kR2 = pixel2.val[2];
+  const double kG2 = pixel2.val[1];
+  const double kB2 = pixel2.val[0];
+
+  cv::Vec3b& pixel3 = imageCopy.at<cv::Vec3b>(0, 1);
+  const double kR3 = pixel3.val[2];
+  const double kG3 = pixel3.val[1];
+  const double kB3 = pixel3.val[0];
+
+  cv::Vec3b& pixel4 = imageCopy.at<cv::Vec3b>(1, 1);
+  const double kR4 = pixel4.val[2];
+  const double kG4 = pixel4.val[1];
+  const double kB4 = pixel4.val[0];
+
+  printf("originalimage: (0:%f,1:%f,2:%f),(0:%f,1:%f,2:%f),(0:%f,1:%f,2:%f),(0:%f,1:%f,2:%f)\n",
+    kR,
+    kB,
+    kG,
+    kR2,
+    kB2,
+    kG2,
+    kR3,
+    kB3,
+    kG3,
+    kR4,
+    kB4,
+    kG4
+  );
+
+  printf("original: (0:%d, 1: %d, 2: %d)\n",
+    imageCopy.data[6],
+    imageCopy.data[7],
+    imageCopy.data[8]
+  );
+
   pixel.val[2] = 255;
   pixel.val[1] = 0;
   pixel.val[0] = 0;
-
-  printf("originalimage: (0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d)\n",
-    imageCopy.data[kRow * 3 + kCol * 3],
-    imageCopy.data[kRow * 3 + kCol * 3 + 1],
-    imageCopy.data[kRow * 3 + kCol * 3 + 2],
-    imageCopy.data[kRow * 3 + (kCol + 1) * 3],
-    imageCopy.data[kRow * 3 + (kCol + 1) * 3 + 1],
-    imageCopy.data[kRow * 3 + (kCol + 1) * 3 + 2],
-    imageCopy.data[(kRow + 1) * 3 + kCol * 3],
-    imageCopy.data[(kRow + 1) * 3 + kCol * 3 + 1],
-    imageCopy.data[(kRow + 1) * 3 + kCol * 3 + 2],
-    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3],
-    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3 + 1],
-    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3 + 2]
-  );
 
   // imageCopy.data[kRow * 3 + kCol * 3] = 0;
   // imageCopy.data[kRow * 3 + kCol * 3 + 1] = 0;
   // imageCopy.data[kRow * 3 + kCol * 3 + 2] = 255;
 
-  printf("originalimage(changed) (0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d)\n",
-    imageCopy.data[kRow * 3 + kCol * 3],
-    imageCopy.data[kRow * 3 + kCol * 3 + 1],
-    imageCopy.data[kRow * 3 + kCol * 3 + 2],
-    imageCopy.data[kRow * 3 + (kCol + 1) * 3],
-    imageCopy.data[kRow * 3 + (kCol + 1) * 3 + 1],
-    imageCopy.data[kRow * 3 + (kCol + 1) * 3 + 2],
-    imageCopy.data[(kRow + 1) * 3 + kCol * 3],
-    imageCopy.data[(kRow + 1) * 3 + kCol * 3 + 1],
-    imageCopy.data[(kRow + 1) * 3 + kCol * 3 + 2],
-    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3],
-    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3 + 1],
-    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3 + 2]
+  const double kRa = pixel.val[2];
+  const double kGa = pixel.val[1];
+  const double kBa = pixel.val[0];
+  const double kR2a = pixel2.val[2];
+  const double kG2a = pixel2.val[1];
+  const double kB2a = pixel2.val[0];
+  const double kR3a = pixel3.val[2];
+  const double kG3a = pixel3.val[1];
+  const double kB3a = pixel3.val[0];
+  const double kR4a = pixel4.val[2];
+  const double kG4a = pixel4.val[1];
+  const double kB4a = pixel4.val[0];
+
+  printf("originalimage(after): (0:%f,1:%f,2:%f),(0:%f,1:%f,2:%f),(0:%f,1:%f,2:%f),(0:%f,1:%f,2:%f)\n",
+    kRa,
+    kBa,
+    kGa,
+    kR2a,
+    kB2a,
+    kG2a,
+    kR3a,
+    kB3a,
+    kG3a,
+    kR4a,
+    kB4a,
+    kG4a
   );
+
+  printf("changed: (0:%d, 1: %d, 2: %d)\n",
+      imageCopy.data[6],
+      imageCopy.data[7],
+      imageCopy.data[8]
+    );
 
   // use step in the code
 
