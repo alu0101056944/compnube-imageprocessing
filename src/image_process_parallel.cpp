@@ -80,5 +80,44 @@
     }
   }
 
-  return outputImage;
+  cv::Mat imageCopy;
+  image.copyTo(imageCopy);
+
+  const int kRow = 0;
+  const int kCol = 0;
+
+  printf("originalimage: (0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d)\n",
+    imageCopy.data[kRow * 3 + kCol * 3],
+    imageCopy.data[kRow * 3 + kCol * 3 + 1],
+    imageCopy.data[kRow * 3 + kCol * 3 + 2],
+    imageCopy.data[kRow * 3 + (kCol + 1) * 3],
+    imageCopy.data[kRow * 3 + (kCol + 1) * 3 + 1],
+    imageCopy.data[kRow * 3 + (kCol + 1) * 3 + 2],
+    imageCopy.data[(kRow + 1) * 3 + kCol * 3],
+    imageCopy.data[(kRow + 1) * 3 + kCol * 3 + 1],
+    imageCopy.data[(kRow + 1) * 3 + kCol * 3 + 2],
+    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3],
+    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3 + 1],
+    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3 + 2]
+  );
+
+  imageCopy.data[kRow * 3 + kCol * 3] = 0;
+  imageCopy.data[kRow * 3 + kCol * 3 + 1] = 0;
+  imageCopy.data[kRow * 3 + kCol * 3 + 2] = 255;
+
+  printf("originalimage(changed) (0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d)\n",
+    imageCopy.data[kRow * 3 + kCol * 3],
+    imageCopy.data[kRow * 3 + kCol * 3 + 1],
+    imageCopy.data[kRow * 3 + kCol * 3 + 2],
+    imageCopy.data[kRow * 3 + (kCol + 1) * 3],
+    imageCopy.data[kRow * 3 + (kCol + 1) * 3 + 1],
+    imageCopy.data[kRow * 3 + (kCol + 1) * 3 + 2],
+    imageCopy.data[(kRow + 1) * 3 + kCol * 3],
+    imageCopy.data[(kRow + 1) * 3 + kCol * 3 + 1],
+    imageCopy.data[(kRow + 1) * 3 + kCol * 3 + 2],
+    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3],
+    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3 + 1],
+    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3 + 2]
+  );
+  return imageCopy;
 }

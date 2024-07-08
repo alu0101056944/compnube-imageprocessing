@@ -3,6 +3,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include <cmath>
 
 #include <opencv2/opencv.hpp>
 
@@ -11,35 +12,21 @@
 #include <opencv2/core/cuda.hpp>
 #include <iostream>
 
-#define CHECK_CUDA(call) { \
-    cudaError_t err = call; \
-    if (err != cudaSuccess) { \
-        std::cerr << "CUDA error in " << __FILE__ << " line " << __LINE__ << ": " << cudaGetErrorString(err) << std::endl; \
-        exit(1); \
-    } \
-}
+__global__ void _getImageChunk(uchar* originalData, uchar* pixelData, int rows, int cols) {
+  const int kIntensityLevels = 20;
+  const int kRadius = 5;
 
-__global__ void setColor(uchar* image, int width, int height, int channels) {
-  // const int kIntensityLevels = 20;
-  // const int kRadius = 5;
+  const int kPreviousThreadAmount = blockIdx.x * blockDim.x * blockDim.y;
+  const int kCurrentBlockThreadIndex = threadIdx.y * blockDim.x + threadIdx.x;
+  const int kPixelIndex = kPreviousThreadAmount + kCurrentBlockThreadIndex;
 
-  int x = blockIdx.x * blockDim.x + threadIdx.x;
-  int y = blockIdx.y * blockDim.y + threadIdx.y;
-  
-  if (x < width && y < height) {
-    int idx = (y * width + x) * channels;
-    image[idx] = 255;        // Blue
-    image[idx + 1] = 255;    // Green
-    image[idx + 2] = 255;  // Red
-  }
+  if (kPixelIndex < rows * cols) {
+    const int kRow = floorf(kPixelIndex / cols);
+    const int kColumn = kPixelIndex % cols;
 
-  // const int kThreadAmount = blockIdx.x * blockDim.x * blockDim.y;
-  // const int kThreadId = threadIdx.y * blockDim.x + threadIdx.x;
-  // const int kPixelIndex = kThreadAmount + kThreadId;
-
-  // if (kPixelIndex < rows * cols) {
-  //   const int kRow = floorf(kPixelIndex / cols);
-  //   const int kColumn = kPixelIndex % cols;
+    pixelData[kRow * 3 * cols + kColumn * 3 + 2] = 55;
+    pixelData[kRow * 3 * cols + kColumn * 3 + 1] = 55;
+    pixelData[kRow * 3 * cols + kColumn * 3] = 55;
 
     // int maximumIntensity = -1;
 
@@ -87,64 +74,71 @@ __global__ void setColor(uchar* image, int width, int height, int channels) {
     // pixelData[kRow * 3 * cols + kColumn * 3 + 2] = kRFinal;
     // pixelData[kRow * 3 * cols + kColumn * 3 + 1] = kGFinal;
     // pixelData[kRow * 3 * cols + kColumn * 3] = kBFinal;
-
-    // pixelData[kRow * 3 * cols + kColumn * 3 + 2] = 55;
-    // pixelData[kRow * 3 * cols + kColumn * 3 + 1] = 55;
-    // pixelData[kRow * 3 * cols + kColumn * 3] = 55;
-  // }
+  }
 }
 
-cv::Mat getProcessedImageParallelCUDA(const cv::Mat& input) {
-  // cv::Mat imageCopy(image);
+cv::Mat getProcessedImageParallelCUDA(const cv::Mat& image) {
+  cv::Mat imageCopy;
+  image.copyTo(imageCopy);
+
+  const int kRow = 0;
+  const int kCol = 0;
+
+  cv::Vec3b& pixel = imageCopy.at<cv::Vec3b>(0, 0);
+  const double kR = pixel.val[2];
+  const double kG = pixel.val[1];
+  const double kB = pixel.val[0];
+
+  pixel.val[2] = 255;
+  pixel.val[1] = 0;
+  pixel.val[0] = 0;
+
+  printf("originalimage: (0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d)\n",
+    imageCopy.data[kRow * 3 + kCol * 3],
+    imageCopy.data[kRow * 3 + kCol * 3 + 1],
+    imageCopy.data[kRow * 3 + kCol * 3 + 2],
+    imageCopy.data[kRow * 3 + (kCol + 1) * 3],
+    imageCopy.data[kRow * 3 + (kCol + 1) * 3 + 1],
+    imageCopy.data[kRow * 3 + (kCol + 1) * 3 + 2],
+    imageCopy.data[(kRow + 1) * 3 + kCol * 3],
+    imageCopy.data[(kRow + 1) * 3 + kCol * 3 + 1],
+    imageCopy.data[(kRow + 1) * 3 + kCol * 3 + 2],
+    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3],
+    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3 + 1],
+    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3 + 2]
+  );
+
+  // imageCopy.data[kRow * 3 + kCol * 3] = 0;
+  // imageCopy.data[kRow * 3 + kCol * 3 + 1] = 0;
+  // imageCopy.data[kRow * 3 + kCol * 3 + 2] = 255;
+
+  printf("originalimage(changed) (0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d),(0:%d,1:%d,2:%d)\n",
+    imageCopy.data[kRow * 3 + kCol * 3],
+    imageCopy.data[kRow * 3 + kCol * 3 + 1],
+    imageCopy.data[kRow * 3 + kCol * 3 + 2],
+    imageCopy.data[kRow * 3 + (kCol + 1) * 3],
+    imageCopy.data[kRow * 3 + (kCol + 1) * 3 + 1],
+    imageCopy.data[kRow * 3 + (kCol + 1) * 3 + 2],
+    imageCopy.data[(kRow + 1) * 3 + kCol * 3],
+    imageCopy.data[(kRow + 1) * 3 + kCol * 3 + 1],
+    imageCopy.data[(kRow + 1) * 3 + kCol * 3 + 2],
+    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3],
+    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3 + 1],
+    imageCopy.data[(kRow + 1) * 3 + (kCol + 1) * 3 + 2]
+  );
+
+  // use step in the code
 
   // cv::cuda::GpuMat newGpuImage(image.rows, image.cols, CV_8UC3);
   // newGpuImage.upload(imageCopy);
 
-
-  // dim3 block(32, 32);
-  // dim3 grid((image.cols + block.x - 1) / block.x, (image.rows + block.y - 1) / block.y);
-
-  // const int kThreadAmountPerBlock = 32;
+  // const int kThreadAmountPerBlock = 32 * 32;
   // const int kBlockAmount =
-  //     (int)ceil((image.rows * image.cols) / kThreadAmountPerBlock);
-  // _getImageChunk<<<kBlockAmount, kThreadAmountPerBlock>>>(imageCopy.data,
+  //     ceil(((float)image.rows * (float)image.cols) / kThreadAmountPerBlock);
+  // dim3 threadsPerBlock(32, 32);
+  // _getImageChunk<<<kBlockAmount, threadsPerBlock>>>(imageCopy.data,
   //     newGpuImage.data, image.rows, image.cols);
 
-
-
-  int deviceCount;
-  cudaGetDeviceCount(&deviceCount);
-  if (deviceCount == 0) {
-      std::cerr << "No CUDA-capable devices found" << std::endl;
-      return cv::Mat();
-  }
-
-  cudaDeviceProp prop;
-  cudaGetDeviceProperties(&prop, 0);
-  std::cout << "Using GPU: " << prop.name << " with Compute Capability " << prop.major << "." << prop.minor << std::endl;
-
-
-  cv::cuda::GpuMat d_input;
-  d_input.upload(input);
-  
-  cv::cuda::GpuMat d_output(input.size(), input.type());
-  
-  dim3 block(32, 32);
-  dim3 grid((input.cols + block.x - 1) / block.x, (input.rows + block.y - 1) / block.y);
-  std::cout << "Input image size: " << input.cols << "x" << input.rows << " channels: " << input.channels() << std::endl;
-  std::cout << "Grid dimensions: " << grid.x << "x" << grid.y << std::endl;
-  std::cout << "Block dimensions: " << block.x << "x" << block.y << std::endl;
-
-  setColor<<<grid, block>>>(d_output.ptr<uchar>(), input.cols, input.rows, input.channels());
-  CHECK_CUDA(cudaGetLastError());
-  CHECK_CUDA(cudaDeviceSynchronize());
-
-  cv::Mat output;
-  d_output.download(output);
-  std::cout << "Output image size: " << output.cols << "x" << output.rows << " channels: " << output.channels() << std::endl;
-  
-  return output;
-
   // newGpuImage.download(imageCopy);
-  // return imageCopy;
+  return imageCopy;
 }
