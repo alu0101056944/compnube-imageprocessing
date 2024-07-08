@@ -15,26 +15,40 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <cuda_runtime.h>
+
 namespace fs = std::filesystem;
 
 #include "includes/image_process_cuda.h"
 
 void printExecutionTime(const cv::Mat& image) {
   const int kAmountOfIterations = 5;
+  float totalTime = 0.0f;
 
-  struct timeval timeStart[1];
-  struct timeval timeEnd[1];
+  // Warm-up run
+  getProcessedImageParallelCUDA(image);
 
-  gettimeofday(timeStart, NULL);
+  cudaEvent_t start;
+  cudaEvent_t stop;
+  cudaEventCreate(&start);
+  cudaEventCreate(&stop); 
+
+  cudaEventRecord(start);
   for (size_t i = 0; i < kAmountOfIterations; ++i) {
     const cv::Mat processedImage = getProcessedImageParallelCUDA(image);
-  }
-  gettimeofday(timeEnd, NULL);
 
-  time_t kEjecutionTime = timeEnd->tv_sec - timeStart->tv_sec +
-      (timeEnd->tv_usec - timeStart->tv_usec) / 1.0e6;
-  std::cout << kEjecutionTime / kAmountOfIterations;
-  std::cout << " seconds. (Execution time)" << std::endl;
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
+
+    float milliseconds = 0;
+    cudaEventElapsedTime(&milliseconds, start, stop);
+    totalTime += milliseconds;
+  }
+  cudaEventDestroy(start);
+  cudaEventDestroy(stop);
+
+  std::cout << totalTime / kAmountOfIterations;
+  std::cout << " miliseconds. (Execution time)" << std::endl;
 }
 
 void writeImage(const cv::Mat& image, const fs::path& path) {
