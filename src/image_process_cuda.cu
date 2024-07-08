@@ -88,6 +88,9 @@ cv::Mat getProcessedImageParallelCUDA(const cv::Mat& image) {
   _getImageChunk<<<gridSize, threadsPerBlock>>>(originalImageInGPU.data,
       newGpuImage.data, image.rows, image.cols, newGpuImage.step);
 
+  printf("grid size: %dx%d\n", gridSize.x, gridSize.y);
+  printf("threads per block: %dx%d\n", threadsPerBlock.x, threadsPerBlock.y);
+
   newGpuImage.download(imageCopy);
   return imageCopy;
 }
